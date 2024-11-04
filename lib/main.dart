@@ -161,7 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     // Card untuk Servo Control Status dan Tombol
                     Card(
                       margin: const EdgeInsets.symmetric(
-                          vertical: 5.0, horizontal: 60),
+                          vertical: 5.0, horizontal: 10),
                       child: Padding(
                         padding: const EdgeInsets.all(50.0),
                         child: Column(
