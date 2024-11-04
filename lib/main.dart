@@ -150,22 +150,21 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         Card(
                           margin: const EdgeInsets.symmetric(
-                              vertical: 4,
-                              horizontal: 20), // Changed to match other cards
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              children: <Widget>[
-                                Text(
-                                    'Servo Control Status: ${servoStatus ? 'ON' : 'OFF'}'),
-                                const SizedBox(height: 12),
+                              vertical: 4, horizontal: 20),
+                          child: ListTile(
+                            title: Text('Servo Control Status'),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(servoStatus ? 'ON' : 'OFF'),
+                                const SizedBox(height: 8),
                                 ElevatedButton(
                                   onPressed: _activateServo,
                                   style: ElevatedButton.styleFrom(
                                     foregroundColor: Colors.white,
                                     backgroundColor: Colors.green,
                                   ),
-                                  child: const Text('Tuang'),
+                                  child: const Text('Feed'),
                                 ),
                               ],
                             ),
