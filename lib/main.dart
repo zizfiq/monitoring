@@ -37,16 +37,14 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final DatabaseReference _sensorRef =
       FirebaseDatabase.instance.ref().child('sensorData');
-  final DatabaseReference _servoRef = FirebaseDatabase.instance
-      .ref()
-      .child('servoControl/status'); // Referensi untuk kontrol status
+  final DatabaseReference _servoRef =
+      FirebaseDatabase.instance.ref().child('servoControl/status');
   Map<String, dynamic> sensorData = {};
-  bool servoStatus = false; // Status servo
+  bool servoStatus = false;
   Timer? _timer;
 
   void _startTimer() {
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      // Mengambil data sensor
       _sensorRef.once().then((DatabaseEvent event) {
         final data = event.snapshot.value as Map?;
         if (data != null) {
@@ -56,7 +54,6 @@ class _MyHomePageState extends State<MyHomePage> {
         }
       });
 
-      // Mengambil status servo
       _servoRef.once().then((DatabaseEvent event) {
         final status = event.snapshot.value;
         if (status is bool) {
@@ -80,12 +77,9 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
-  // Fungsi untuk menghidupkan servo selama 2 detik
   void _activateServo() {
-    // Set status servo menjadi ON
     _servoRef.set(true).then((_) {
       print('Servo control status updated to: ON');
-      // Setelah 2 detik, set kembali menjadi OFF
       Timer(Duration(seconds: 2), () {
         _servoRef.set(false).then((_) {
           print('Servo control status updated to: OFF');
@@ -98,7 +92,6 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  // Fungsi untuk format angka dengan dua angka di belakang koma
   String formatNumber(double value) {
     return value.toStringAsFixed(2);
   }
@@ -110,83 +103,86 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Center(
-        child: sensorData.isEmpty
-            ? const CircularProgressIndicator()
-            : SingleChildScrollView(
-                // Untuk memungkinkan scroll jika konten banyak
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    // Card untuk EC
-                    Card(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 5.0, horizontal: 60),
-                      child: ListTile(
-                        title: Text('EC'),
-                        subtitle: Text(
-                            '${formatNumber(sensorData['EC']?.toDouble() ?? 0)}'),
-                      ),
-                    ),
-                    // Card untuk TDS
-                    Card(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 5.0, horizontal: 60),
-                      child: ListTile(
-                        title: Text('TDS'),
-                        subtitle: Text(
-                            '${formatNumber(sensorData['TDS']?.toDouble() ?? 0)}'),
-                      ),
-                    ),
-                    // Card untuk Temperature
-                    Card(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 5.0, horizontal: 60),
-                      child: ListTile(
-                        title: Text('Temperature'),
-                        subtitle: Text(
-                            '${formatNumber(sensorData['Temperature']?.toDouble() ?? 0)}'),
-                      ),
-                    ),
-                    // Card untuk pH
-                    Card(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 5.0, horizontal: 60),
-                      child: ListTile(
-                        title: Text('pH'),
-                        subtitle: Text(
-                            '${formatNumber(sensorData['pH']?.toDouble() ?? 0)}'),
-                      ),
-                    ),
-                    // Card untuk Servo Control Status dan Tombol
-                    Card(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 5.0, horizontal: 10),
-                      child: Padding(
-                        padding: const EdgeInsets.all(50.0),
-                        child: Column(
-                          children: <Widget>[
-                            Text(
-                                'Servo Control Status: ${servoStatus ? 'ON' : 'OFF'}'),
-                            const SizedBox(height: 20), // Untuk memberi jarak
-                            ElevatedButton(
-                              onPressed: () {
-                                _activateServo(); // Memanggil fungsi untuk menghidupkan servo
-                              },
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: Colors.green,
-                              ),
-                              child: const Text('Tuang'),
-                            ),
-                          ],
+      body: sensorData.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    padding:
+                        const EdgeInsets.only(top: 8), // Reduced top padding
+                    child: Column(
+                      children: [
+                        Card(
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 4,
+                              horizontal: 20), // Reduced vertical margin
+                          child: ListTile(
+                            title: Text('EC'),
+                            subtitle: Text(
+                                '${formatNumber(sensorData['EC']?.toDouble() ?? 0)}'),
+                          ),
                         ),
-                      ),
+                        Card(
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 4,
+                              horizontal: 20), // Reduced vertical margin
+                          child: ListTile(
+                            title: Text('TDS'),
+                            subtitle: Text(
+                                '${formatNumber(sensorData['TDS']?.toDouble() ?? 0)}'),
+                          ),
+                        ),
+                        Card(
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 4,
+                              horizontal: 20), // Reduced vertical margin
+                          child: ListTile(
+                            title: Text('Temperature'),
+                            subtitle: Text(
+                                '${formatNumber(sensorData['Temperature']?.toDouble() ?? 0)}'),
+                          ),
+                        ),
+                        Card(
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 4,
+                              horizontal: 20), // Reduced vertical margin
+                          child: ListTile(
+                            title: Text('pH'),
+                            subtitle: Text(
+                                '${formatNumber(sensorData['pH']?.toDouble() ?? 0)}'),
+                          ),
+                        ),
+                        Card(
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 4,
+                              horizontal: 1), // Reduced vertical margin
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.all(20.0), // Reduced padding
+                            child: Column(
+                              children: <Widget>[
+                                Text(
+                                    'Servo Control Status: ${servoStatus ? 'ON' : 'OFF'}'),
+                                const SizedBox(height: 12), // Reduced spacing
+                                ElevatedButton(
+                                  onPressed: _activateServo,
+                                  style: ElevatedButton.styleFrom(
+                                    foregroundColor: Colors.white,
+                                    backgroundColor: Colors.green,
+                                  ),
+                                  child: const Text('Tuang'),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-      ),
+            ),
     );
   }
 }
