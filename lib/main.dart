@@ -109,14 +109,12 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Column(
                 children: <Widget>[
                   Container(
-                    padding:
-                        const EdgeInsets.only(top: 8), // Reduced top padding
+                    padding: const EdgeInsets.only(top: 8),
                     child: Column(
                       children: [
                         Card(
                           margin: const EdgeInsets.symmetric(
-                              vertical: 4,
-                              horizontal: 20), // Reduced vertical margin
+                              vertical: 4, horizontal: 20),
                           child: ListTile(
                             title: Text('EC'),
                             subtitle: Text(
@@ -125,8 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         Card(
                           margin: const EdgeInsets.symmetric(
-                              vertical: 4,
-                              horizontal: 20), // Reduced vertical margin
+                              vertical: 4, horizontal: 20),
                           child: ListTile(
                             title: Text('TDS'),
                             subtitle: Text(
@@ -135,8 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         Card(
                           margin: const EdgeInsets.symmetric(
-                              vertical: 4,
-                              horizontal: 20), // Reduced vertical margin
+                              vertical: 4, horizontal: 20),
                           child: ListTile(
                             title: Text('Temperature'),
                             subtitle: Text(
@@ -145,8 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         Card(
                           margin: const EdgeInsets.symmetric(
-                              vertical: 4,
-                              horizontal: 20), // Reduced vertical margin
+                              vertical: 4, horizontal: 20),
                           child: ListTile(
                             title: Text('pH'),
                             subtitle: Text(
@@ -156,15 +151,14 @@ class _MyHomePageState extends State<MyHomePage> {
                         Card(
                           margin: const EdgeInsets.symmetric(
                               vertical: 4,
-                              horizontal: 1), // Reduced vertical margin
+                              horizontal: 20), // Changed to match other cards
                           child: Padding(
-                            padding:
-                                const EdgeInsets.all(20.0), // Reduced padding
+                            padding: const EdgeInsets.all(16.0),
                             child: Column(
                               children: <Widget>[
                                 Text(
                                     'Servo Control Status: ${servoStatus ? 'ON' : 'OFF'}'),
-                                const SizedBox(height: 12), // Reduced spacing
+                                const SizedBox(height: 12),
                                 ElevatedButton(
                                   onPressed: _activateServo,
                                   style: ElevatedButton.styleFrom(
