@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
-import 'package:monitoring/notification.dart';
-import 'package:monitoring/profile.dart';
+import 'package:monitoring/Screen/notification.dart';
+import 'package:monitoring/Screen/profile.dart';
 
 void main() {
   runApp(const MyApp());
