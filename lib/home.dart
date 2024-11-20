@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
+import 'package:monitoring/notification.dart';
+import 'package:monitoring/profile.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,7 +36,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Map<String, dynamic> sensorData = {};
-  bool servoStatus = false;
+  bool servoStatus = false; // Track servo status
+  bool isButtonDisabled = false; // Track button state
   Timer? _timer;
   final String apiKey = 'AIzaSyC9kIkLAGkB0xIS31vXQ8mtqMXED9TnSQc';
   final String databaseUrl =
@@ -71,6 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (response.statusCode == 200) {
       setState(() {
         servoStatus = json.decode(response.body);
+        isButtonDisabled = servoStatus; // Disable button if servo is on
       });
     } else {
       print('Failed to load servo status');
@@ -84,6 +88,9 @@ class _MyHomePageState extends State<MyHomePage> {
     );
     if (response.statusCode == 200) {
       print('Servo control status updated to: ON');
+      setState(() {
+        isButtonDisabled = true; // Disable the button when servo is on
+      });
       Timer(const Duration(seconds: 2), _deactivateServo);
     } else {
       print('Failed to activate servo');
@@ -97,6 +104,9 @@ class _MyHomePageState extends State<MyHomePage> {
     );
     if (response.statusCode == 200) {
       print('Servo control status updated to: OFF');
+      setState(() {
+        isButtonDisabled = false; // Enable the button when servo is off
+      });
     } else {
       print('Failed to deactivate servo');
     }
@@ -183,7 +193,12 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications_outlined, color: Colors.black),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NotificationPage()),
+              );
+            },
           ),
         ],
       ),
@@ -302,9 +317,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: _activateServo,
+                            onPressed: isButtonDisabled ? null : _activateServo,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue,
+                              backgroundColor:
+                                  isButtonDisabled ? Colors.grey : Colors.blue,
                               foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(
@@ -331,7 +347,13 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: [
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const ProfilePage()),
+                            );
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
                             foregroundColor: Colors.black,
