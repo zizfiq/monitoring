@@ -4,19 +4,28 @@ import 'package:url_launcher/url_launcher.dart';
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
-  Future<void> _openInstagram() async {
+  Future<void> _openInstagram(BuildContext context) async {
     const url = 'https://www.instagram.com/fiqri.aaziz/';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
+    try {
+      if (await canLaunch(url)) {
+        await launch(url);
+      } else {
+        throw 'Could not launch $url';
+      }
+    } catch (e) {
+      // Handle the error gracefully
+      print('Error launching URL: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text('Could not open Instagram. Please try again later.')),
+      );
     }
   }
 
   Widget _buildProfileButton({
     required String text,
     required IconData icon,
-    VoidCallback? onTap,
+    required VoidCallback? onTap,
   }) {
     return ElevatedButton(
       onPressed: onTap,
@@ -140,19 +149,23 @@ class ProfilePage extends StatelessWidget {
               _buildProfileButton(
                 text: 'Help & support',
                 icon: Icons.help_outline_rounded,
-                onTap: _openInstagram, // Open Instagram on tap
+                onTap: () => _openInstagram(context), // Open Instagram on tap
               ),
               const SizedBox(height: 16),
               _buildProfileButton(
                 text: 'Send feedback',
                 icon: Icons.feedback_outlined,
-                onTap: () {},
+                onTap: () {
+                  // Implement feedback functionality here
+                },
               ),
               const SizedBox(height: 16),
               _buildProfileButton(
                 text: 'Sign out',
                 icon: Icons.logout_rounded,
-                onTap: () {},
+                onTap: () {
+                  // Implement sign out functionality here
+                },
               ),
             ],
           ),

@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:monitoring/Screen/notification.dart';
 import 'package:monitoring/Screen/profile.dart';
+import 'package:monitoring/Screen/data.dart';
 
 void main() {
   runApp(const MyApp());
@@ -38,6 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Map<String, dynamic> sensorData = {};
   bool servoStatus = false; // Track servo status
   bool isButtonDisabled = false; // Track button state
+  bool isButtonPressed = false; // Track if the button has been pressed
   Timer? _timer;
   final String apiKey = 'AIzaSyC9kIkLAGkB0xIS31vXQ8mtqMXED9TnSQc';
   final String databaseUrl =
@@ -106,6 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
       print('Servo control status updated to: OFF');
       setState(() {
         isButtonDisabled = false; // Enable the button when servo is off
+        isButtonPressed = false; // Reset button press flag
       });
     } else {
       print('Failed to deactivate servo');
@@ -317,7 +320,49 @@ class _MyHomePageState extends State<MyHomePage> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: isButtonDisabled ? null : _activateServo,
+                            onPressed: isButtonDisabled || isButtonPressed
+                                ? null
+                                : () async {
+                                    isButtonPressed =
+                                        true; // Set the flag to true on first press
+                                    await _activateServo();
+                                    // Get current sensor data
+                                    final response = await http.get(Uri.parse(
+                                        '$databaseUrl/sensorData.json?auth=$apiKey'));
+                                    if (response.statusCode == 200) {
+                                      final sensorData =
+                                          json.decode(response.body);
+
+                                      // Get current timestamp
+                                      final now = DateTime.now();
+                                      final timeKey =
+                                          now.millisecondsSinceEpoch.toString();
+
+                                      // Save feeding data with sensor readings
+                                      await http.put(
+                                        Uri.parse(
+                                            '$databaseUrl/feedingData/$timeKey.json?auth=$apiKey'),
+                                        body: json.encode({
+                                          'timestamp': now.toIso8601String(),
+                                          'feedAmount':
+                                              300, // Fixed amount as per your data
+                                          'temperature':
+                                              sensorData['Temperature']
+                                                      ?.toDouble() ??
+                                                  0,
+                                          'tds':
+                                              sensorData['TDS']?.toDouble() ??
+                                                  0,
+                                          'ph':
+                                              sensorData['pH']?.toDouble() ?? 0,
+                                        }),
+                                      );
+                                    }
+                                    // Optional: Reset the flag after 2 seconds to allow pressing again
+                                    await Future.delayed(Duration(seconds: 2));
+                                    isButtonPressed =
+                                        false; // Reset the flag after 2 seconds
+                                  },
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
                                   isButtonDisabled ? Colors.grey : Colors.blue,
@@ -377,7 +422,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       const SizedBox(width: 16),
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const DataPage(),
+                              ),
+                            );
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
                             foregroundColor: Colors.black,
