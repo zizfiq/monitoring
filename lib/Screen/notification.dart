@@ -58,10 +58,10 @@ class _NotificationPageState extends State<NotificationPage> {
             width: 2,
           ),
           borderRadius: BorderRadius.circular(8),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.black,
-              offset: const Offset(4, 4),
+              offset: Offset(4, 4),
               spreadRadius: 0,
               blurRadius: 0,
             ),
@@ -201,10 +201,10 @@ class NotificationItem extends StatelessWidget {
             width: 2,
           ),
           borderRadius: BorderRadius.circular(8),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.black,
-              offset: const Offset(4, 4),
+              offset: Offset(4, 4),
               spreadRadius: 0,
               blurRadius: 0,
             ),

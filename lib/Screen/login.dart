@@ -5,6 +5,7 @@ import 'package:monitoring/Screen/home.dart';
 import '../Services/authentication.dart';
 import '../Widget/snackbar.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'signup.dart'; // Import the SignupScreen
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -411,6 +412,24 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                // Add the sign-up option here
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const SignupScreen(),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    "Don't have an account? Sign Up",
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
