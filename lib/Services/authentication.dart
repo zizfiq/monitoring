@@ -14,15 +14,14 @@ class AuthMethod {
   }) async {
     String res = "Some error Occurred";
     try {
-      if (email.isNotEmpty ||
-          password.isNotEmpty ||
-          name.isNotEmpty) {
+      if (email.isNotEmpty || password.isNotEmpty || name.isNotEmpty) {
         // register user in auth with email and password
         UserCredential cred = await _auth.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
         // add user to your  firestore database
+        // ignore: avoid_print
         print(cred.user!.uid);
         await _firestore.collection("users").doc(cred.user!.uid).set({
           'name': name,

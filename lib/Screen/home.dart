@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
@@ -359,7 +361,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                       );
                                     }
                                     // Optional: Reset the flag after 2 seconds to allow pressing again
-                                    await Future.delayed(Duration(seconds: 2));
+                                    await Future.delayed(
+                                        const Duration(seconds: 2));
                                     isButtonPressed =
                                         false; // Reset the flag after 2 seconds
                                   },

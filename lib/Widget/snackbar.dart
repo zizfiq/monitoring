@@ -5,7 +5,7 @@ showSnackBar(BuildContext context, String text) {
   return ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Container(
-        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
         decoration: BoxDecoration(
           color: Colors.white, // Background color
           border: Border.all(color: Colors.blue, width: 2), // Blue border
@@ -13,7 +13,7 @@ showSnackBar(BuildContext context, String text) {
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.3), // Shadow for neo-brutalism
-              offset: Offset(4, 4), // Shadow offset
+              offset: const Offset(4, 4), // Shadow offset
               blurRadius: 4, // Shadow blur
               spreadRadius: 0, // No spread
             ),

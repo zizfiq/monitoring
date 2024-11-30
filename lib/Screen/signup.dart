@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 
 import '../Services/authentication.dart';
@@ -123,7 +125,7 @@ class _SignupScreenState extends State<SignupScreen> {
         ),
       ),
       child: isLoading
-          ? CircularProgressIndicator(color: Colors.white)
+          ? const CircularProgressIndicator(color: Colors.white)
           : const Text("Sign Up", style: TextStyle(color: Colors.white)),
     );
   }

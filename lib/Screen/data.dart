@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -169,8 +171,8 @@ class _DataPageState extends State<DataPage> {
                   bottom: BorderSide(color: Colors.black, width: 2),
                 ),
               ),
-              child: Row(
-                children: const [
+              child: const Row(
+                children: [
                   Expanded(
                     flex: 2,
                     child: Text(

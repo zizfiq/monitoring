@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:monitoring/Login%20With%20Google/google_auth.dart';
@@ -19,7 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController forgotEmailController = TextEditingController();
   final auth = FirebaseAuth.instance;
-  final FlutterSecureStorage storage = FlutterSecureStorage();
+  final FlutterSecureStorage storage = const FlutterSecureStorage();
 
   bool isLoading = false;
   bool rememberMe = false;

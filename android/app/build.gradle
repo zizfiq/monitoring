@@ -25,24 +25,31 @@ if (flutterVersionName == null) {
 
 android {
     namespace = "com.example.monitoring"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 34  // Update to latest Android SDK version
+
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17  // Update to Java 17 for compatibility
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'  // Kotlin JVM target matching Java version
     }
 
     defaultConfig {
         applicationId = "com.example.monitoring"
         minSdk = 23
-        targetSdk = flutter.targetSdkVersion
+        targetSdk = 34  // Match compileSdk
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
     }
 
     buildTypes {
         release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig = signingConfigs.debug
         }
     }
@@ -53,7 +60,8 @@ flutter {
 }
 
 dependencies {
-    // Tambahkan dependencies Firebase
-    implementation platform('com.google.firebase:firebase-bom:32.7.1')
-    implementation 'com.google.firebase:firebase-analytics'
+    implementation platform('com.google.firebase:firebase-bom:32.7.4')  // Latest version
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.22"
 }
