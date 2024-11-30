@@ -1,44 +1,76 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:monitoring/Login%20With%20Google/google_auth.dart';
+import 'package:monitoring/Screen/home.dart';
 import '../Services/authentication.dart';
 import '../Widget/snackbar.dart';
-import '../Screen/home.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _SignupScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _SignupScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController forgotEmailController = TextEditingController();
   final auth = FirebaseAuth.instance;
+  final FlutterSecureStorage storage = FlutterSecureStorage();
+
   bool isLoading = false;
   bool rememberMe = false;
 
   @override
   void dispose() {
-    super.dispose();
     emailController.dispose();
     passwordController.dispose();
     forgotEmailController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLoginData();
+  }
+
+  void _loadLoginData() async {
+    String? email = await storage.read(key: 'email');
+    String? password = await storage.read(key: 'password');
+
+    if (email != null && password != null) {
+      emailController.text = email;
+      passwordController.text = password;
+      setState(() {
+        rememberMe = true; // Update the state to reflect that we loaded data
+      });
+    }
   }
 
   void loginUser() async {
     setState(() {
       isLoading = true;
     });
+
     String res = await AuthMethod().loginUser(
         email: emailController.text, password: passwordController.text);
 
     if (res == "success") {
+      if (rememberMe) {
+        await storage.write(key: 'email', value: emailController.text);
+        await storage.write(key: 'password', value: passwordController.text);
+      } else {
+        await storage.delete(key: 'email');
+        await storage.delete(key: 'password');
+      }
+
       setState(() {
         isLoading = false;
       });
+
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => const MyHomePage(
@@ -183,12 +215,20 @@ class _SignupScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 40),
+                const Text(
+                  "Shrimp Monitoring",
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 20),
                 Image.asset(
                   'images/udang.png',
                   height: 120,
                 ),
                 const SizedBox(height: 40),
-                // Email Input
                 Container(
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.black, width: 2),
@@ -214,7 +254,6 @@ class _SignupScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                // Password Input
                 Container(
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.black, width: 2),
@@ -241,7 +280,6 @@ class _SignupScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                // Remember Me and Forgot Password
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -276,7 +314,6 @@ class _SignupScreenState extends State<LoginScreen> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                // Login Button
                 GestureDetector(
                   onTap: loginUser,
                   child: Container(
@@ -307,7 +344,6 @@ class _SignupScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                // Or divider
                 Row(
                   children: [
                     Expanded(
@@ -332,14 +368,13 @@ class _SignupScreenState extends State<LoginScreen> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                // Google Sign In Button
                 GestureDetector(
                   onTap: () async {
                     await FirebaseServices().signInWithGoogle();
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MyHomePage(
+                        builder: (context) => const MyHomePage(
                           title: 'Monitoring Tambak Udang',
                         ),
                       ),

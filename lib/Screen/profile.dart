@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:monitoring/Screen/login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -16,7 +19,7 @@ class ProfilePage extends StatelessWidget {
       // Handle the error gracefully
       print('Error launching URL: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
             content: Text('Could not open Instagram. Please try again later.')),
       );
     }
@@ -163,8 +166,17 @@ class ProfilePage extends StatelessWidget {
               _buildProfileButton(
                 text: 'Sign out',
                 icon: Icons.logout_rounded,
-                onTap: () {
-                  // Implement sign out functionality here
+                onTap: () async {
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  await prefs.setBool(
+                      'isLoggedIn', false); // Reset login status
+                  await FirebaseAuth.instance
+                      .signOut(); // Sign out from Firebase
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                        builder: (context) => const LoginScreen()),
+                  );
                 },
               ),
             ],

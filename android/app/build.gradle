@@ -35,7 +35,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.monitoring"
-        minSdk = 23  // Diubah ke nilai fixed 23
+        minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName

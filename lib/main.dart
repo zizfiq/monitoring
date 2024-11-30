@@ -1,16 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:monitoring/Screen/login.dart';
+import 'package:monitoring/Screen/home.dart'; // Import your home screen
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp()); // Ganti dari LoginPage ke MyApp
+
+  // Check for stored user info
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false; // Check login status
+
+  runApp(MyApp(
+      startingPage: isLoggedIn
+          ? const MyHomePage(title: 'Monitoring Tambak Udang')
+          : const LoginScreen()));
 }
 
-// Tambahkan class MyApp
+// MyApp class remains unchanged
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final Widget startingPage;
+
+  const MyApp({super.key, required this.startingPage});
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +32,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         useMaterial3: true,
       ),
-      home: const LoginScreen(), // LoginPage sebagai halaman awal
-      debugShowCheckedModeBanner: false, // Menghilangkan banner debug
+      home: startingPage,
+      debugShowCheckedModeBanner: false,
     );
   }
 }
