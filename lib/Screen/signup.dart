@@ -1,10 +1,7 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
-
 import '../Services/authentication.dart';
 import '../Widget/snackbar.dart';
-import 'home.dart';
+import 'home.dart'; // ignore_for_file: use_build_context_synchronously
 import 'login.dart';
 
 class SignupScreen extends StatefulWidget {

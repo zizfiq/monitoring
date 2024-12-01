@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:monitoring/Screen/login.dart';
-import 'package:monitoring/Screen/home.dart'; // Import your home screen
+import 'package:monitoring/Screen/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  // Check for stored user info
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false; // Check login status
+  bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
 
   runApp(MyApp(
       startingPage: isLoggedIn
@@ -18,7 +17,6 @@ void main() async {
           : const LoginScreen()));
 }
 
-// MyApp class remains unchanged
 class MyApp extends StatelessWidget {
   final Widget startingPage;
 

@@ -1,8 +1,6 @@
-// ignore_for_file: use_build_context_synchronously, avoid_print
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'dart:convert'; // ignore_for_file: use_build_context_synchronously, avoid_print
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
@@ -24,7 +22,7 @@ class _DataPageState extends State<DataPage> {
   @override
   void initState() {
     super.initState();
-    _fetchFeedingData(); // Hanya mengambil data yang sudah ada
+    _fetchFeedingData();
   }
 
   Future<void> _fetchFeedingData() async {
@@ -53,7 +51,7 @@ class _DataPageState extends State<DataPage> {
         .delete(Uri.parse('$databaseUrl/feedingData.json?auth=$apiKey'));
     if (response.statusCode == 200) {
       setState(() {
-        feedingData.clear(); // Clear the local list
+        feedingData.clear();
       });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Semua data telah dihapus')),
@@ -82,7 +80,6 @@ class _DataPageState extends State<DataPage> {
     final file = File(path);
     await file.writeAsString(csvData);
 
-    // Share the CSV file
     Share.shareFiles([path], text: 'Data Pakan');
 
     ScaffoldMessenger.of(context).showSnackBar(

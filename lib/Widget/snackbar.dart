@@ -1,37 +1,35 @@
 import 'package:flutter/material.dart';
 
-// Function to show a customized SnackBar
 showSnackBar(BuildContext context, String text) {
   return ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Container(
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
         decoration: BoxDecoration(
-          color: Colors.white, // Background color
-          border: Border.all(color: Colors.blue, width: 2), // Blue border
-          borderRadius: BorderRadius.circular(12), // Rounded corners
+          color: Colors.white,
+          border: Border.all(color: Colors.blue, width: 2),
+          borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.3), // Shadow for neo-brutalism
-              offset: const Offset(4, 4), // Shadow offset
-              blurRadius: 4, // Shadow blur
-              spreadRadius: 0, // No spread
+              color: Colors.black.withOpacity(0.3),
+              offset: const Offset(4, 4),
+              blurRadius: 4,
+              spreadRadius: 0,
             ),
           ],
         ),
         child: Text(
           text,
           style: const TextStyle(
-            color: Colors.black, // Text color
-            fontSize: 16, // Font size
-            fontWeight: FontWeight.normal, // Normal weight for text
+            color: Colors.black,
+            fontSize: 16,
+            fontWeight: FontWeight.normal,
           ),
         ),
       ),
-      behavior: SnackBarBehavior.floating, // Allows for a floating SnackBar
-      backgroundColor:
-          Colors.transparent, // Transparent background for the snackbar
-      elevation: 0, // No shadow for the snackbar
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
     ),
   );
 }

@@ -1,13 +1,11 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:monitoring/Login%20With%20Google/google_auth.dart';
 import 'package:monitoring/Screen/home.dart';
 import '../Services/authentication.dart';
-import '../Widget/snackbar.dart';
+import '../Widget/snackbar.dart'; // ignore_for_file: use_build_context_synchronously
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'signup.dart'; // Import the SignupScreen
+import 'signup.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -48,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
       emailController.text = email;
       passwordController.text = password;
       setState(() {
-        rememberMe = true; // Update the state to reflect that we loaded data
+        rememberMe = true;
       });
     }
   }
@@ -119,7 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     Container(),
                     const Text(
-                      "Forgot Your Password",
+                      "Lupa sandi?",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
@@ -148,7 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: TextField(
                     controller: forgotEmailController,
                     decoration: const InputDecoration(
-                      hintText: "Enter your email",
+                      hintText: "Masukkan email",
                       prefixIcon: Icon(Icons.alternate_email),
                       border: InputBorder.none,
                       contentPadding:
@@ -164,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             email: forgotEmailController.text)
                         .then((value) {
                       showSnackBar(context,
-                          "We have sent you the reset password link to your email");
+                          "Kami sudah mengirimkan tautan untuk mereset sandi anda");
                     }).onError((error, stackTrace) {
                       showSnackBar(context, error.toString());
                     });
@@ -188,7 +186,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     child: const Center(
                       child: Text(
-                        'SEND RESET LINK',
+                        'Kirim Tautan Reset',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -219,7 +217,7 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 const SizedBox(height: 40),
                 const Text(
-                  "Shrimp Monitoring",
+                  "Aplikasi Monitoring Tambak Udang",
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
@@ -248,7 +246,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: TextField(
                     controller: emailController,
                     decoration: const InputDecoration(
-                      hintText: 'Enter your email',
+                      hintText: 'Masukkan email',
                       prefixIcon: Icon(Icons.alternate_email),
                       border: InputBorder.none,
                       contentPadding:
@@ -274,7 +272,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: passwordController,
                     obscureText: true,
                     decoration: const InputDecoration(
-                      hintText: 'Enter your password',
+                      hintText: 'Masukkan sandi',
                       prefixIcon: Icon(Icons.lock),
                       border: InputBorder.none,
                       contentPadding:
@@ -301,13 +299,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 const BorderSide(color: Colors.black, width: 2),
                           ),
                         ),
-                        const Text('Remember me'),
+                        const Text('Ingat saya'),
                       ],
                     ),
                     TextButton(
                       onPressed: showForgotPasswordDialog,
                       child: const Text(
-                        'Forgot Password?',
+                        'Lupa sandi?',
                         style: TextStyle(
                           color: Colors.red,
                           fontWeight: FontWeight.bold,
@@ -336,7 +334,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     child: const Center(
                       child: Text(
-                        'LOG IN',
+                        'MASUK',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -358,7 +356,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
-                        'or',
+                        'atau',
                         style: TextStyle(fontSize: 16),
                       ),
                     ),
@@ -407,7 +405,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(width: 12),
                         const Text(
-                          'Continue with Google',
+                          'Lanjutkan dengan Google',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -418,7 +416,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                // Add the sign-up option here
                 GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(
@@ -428,7 +425,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     );
                   },
                   child: const Text(
-                    "Don't have an account? Sign Up",
+                    "Belum punya akun? Daftar",
                     style: TextStyle(
                       color: Colors.blue,
                       fontWeight: FontWeight.bold,

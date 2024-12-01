@@ -1,8 +1,6 @@
-// ignore_for_file: avoid_print
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:async';
+import 'dart:async'; // ignore_for_file: avoid_print
 import 'dart:convert';
 import 'package:monitoring/Screen/notification.dart';
 import 'package:monitoring/Screen/profile.dart';
@@ -39,9 +37,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Map<String, dynamic> sensorData = {};
-  bool servoStatus = false; // Track servo status
-  bool isButtonDisabled = false; // Track button state
-  bool isButtonPressed = false; // Track if the button has been pressed
+  bool servoStatus = false;
+  bool isButtonDisabled = false;
+  bool isButtonPressed = false;
   Timer? _timer;
   final String apiKey = 'AIzaSyC9kIkLAGkB0xIS31vXQ8mtqMXED9TnSQc';
   final String databaseUrl =
@@ -78,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (response.statusCode == 200) {
       setState(() {
         servoStatus = json.decode(response.body);
-        isButtonDisabled = servoStatus; // Disable button if servo is on
+        isButtonDisabled = servoStatus;
       });
     } else {
       print('Failed to load servo status');
@@ -93,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (response.statusCode == 200) {
       print('Servo control status updated to: ON');
       setState(() {
-        isButtonDisabled = true; // Disable the button when servo is on
+        isButtonDisabled = true;
       });
       Timer(const Duration(seconds: 2), _deactivateServo);
     } else {
@@ -109,8 +107,8 @@ class _MyHomePageState extends State<MyHomePage> {
     if (response.statusCode == 200) {
       print('Servo control status updated to: OFF');
       setState(() {
-        isButtonDisabled = false; // Enable the button when servo is off
-        isButtonPressed = false; // Reset button press flag
+        isButtonDisabled = false;
+        isButtonPressed = false;
       });
     } else {
       print('Failed to deactivate servo');
@@ -325,29 +323,24 @@ class _MyHomePageState extends State<MyHomePage> {
                             onPressed: isButtonDisabled || isButtonPressed
                                 ? null
                                 : () async {
-                                    isButtonPressed =
-                                        true; // Set the flag to true on first press
+                                    isButtonPressed = true;
                                     await _activateServo();
-                                    // Get current sensor data
                                     final response = await http.get(Uri.parse(
                                         '$databaseUrl/sensorData.json?auth=$apiKey'));
                                     if (response.statusCode == 200) {
                                       final sensorData =
                                           json.decode(response.body);
 
-                                      // Get current timestamp
                                       final now = DateTime.now();
                                       final timeKey =
                                           now.millisecondsSinceEpoch.toString();
 
-                                      // Save feeding data with sensor readings
                                       await http.put(
                                         Uri.parse(
                                             '$databaseUrl/feedingData/$timeKey.json?auth=$apiKey'),
                                         body: json.encode({
                                           'timestamp': now.toIso8601String(),
-                                          'feedAmount':
-                                              300, // Fixed amount as per your data
+                                          'feedAmount': 300,
                                           'temperature':
                                               sensorData['Temperature']
                                                       ?.toDouble() ??
@@ -360,11 +353,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                         }),
                                       );
                                     }
-                                    // Optional: Reset the flag after 2 seconds to allow pressing again
                                     await Future.delayed(
                                         const Duration(seconds: 2));
-                                    isButtonPressed =
-                                        false; // Reset the flag after 2 seconds
+                                    isButtonPressed = false;
                                   },
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
