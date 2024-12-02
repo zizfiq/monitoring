@@ -74,7 +74,7 @@ class _SignupScreenState extends State<SignupScreen> {
               children: [
                 const SizedBox(height: 40),
                 const Text(
-                  "Aplikasi Monitoring Tambak Udang",
+                  "Aplikasi Monitoring Tambak",
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.bold,

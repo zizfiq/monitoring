@@ -19,17 +19,19 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController forgotEmailController = TextEditingController();
+  final TextEditingController tambakIdController =
+      TextEditingController(); // New controller for ID Tambak
   final auth = FirebaseAuth.instance;
   final FlutterSecureStorage storage = const FlutterSecureStorage();
 
   bool isLoading = false;
-  bool rememberMe = false;
 
   @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
     forgotEmailController.dispose();
+    tambakIdController.dispose(); // Dispose the new controller
     super.dispose();
   }
 
@@ -46,9 +48,6 @@ class _LoginScreenState extends State<LoginScreen> {
     if (email != null && password != null) {
       emailController.text = email;
       passwordController.text = password;
-      setState(() {
-        rememberMe = true;
-      });
     }
   }
 
@@ -57,18 +56,22 @@ class _LoginScreenState extends State<LoginScreen> {
       isLoading = true;
     });
 
+    // Check if the Tambak ID is correct
+    if (tambakIdController.text != '002543') {
+      setState(() {
+        isLoading = false;
+      });
+      showSnackBar(context, "ID Tambak tidak valid.");
+      return;
+    }
+
     String res = await AuthMethod().loginUser(
         email: emailController.text, password: passwordController.text);
 
     if (res == "success") {
       // Store login credentials if remember me is checked
-      if (rememberMe) {
-        await storage.write(key: 'email', value: emailController.text);
-        await storage.write(key: 'password', value: passwordController.text);
-      } else {
-        await storage.delete(key: 'email');
-        await storage.delete(key: 'password');
-      }
+      await storage.delete(key: 'email');
+      await storage.delete(key: 'password');
 
       // Set login state
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -223,7 +226,7 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 const SizedBox(height: 40),
                 const Text(
-                  "Aplikasi Monitoring Tambak Udang",
+                  "Aplikasi Monitoring Tambak",
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
@@ -236,6 +239,33 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 120,
                 ),
                 const SizedBox(height: 40),
+                // Tambak ID Field
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 2),
+                    borderRadius: BorderRadius.circular(8),
+                    color: Colors.white,
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black,
+                        offset: Offset(4, 4),
+                        blurRadius: 0,
+                      ),
+                    ],
+                  ),
+                  child: TextField(
+                    controller: tambakIdController,
+                    decoration: const InputDecoration(
+                      hintText: 'Masukkan ID Tambak',
+                      prefixIcon: Icon(Icons.confirmation_number),
+                      border: InputBorder.none,
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                // Email Field
                 Container(
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.black, width: 2),
@@ -261,6 +291,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
+                // Password Field
                 Container(
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.black, width: 2),
@@ -287,40 +318,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: rememberMe,
-                          onChanged: (value) {
-                            setState(() {
-                              rememberMe = value!;
-                            });
-                          },
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4),
-                            side:
-                                const BorderSide(color: Colors.black, width: 2),
-                          ),
-                        ),
-                        const Text('Ingat saya'),
-                      ],
-                    ),
-                    TextButton(
-                      onPressed: showForgotPasswordDialog,
-                      child: const Text(
-                        'Lupa sandi?',
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
+                // Login Button
                 GestureDetector(
                   onTap: loginUser,
                   child: Container(
@@ -355,45 +353,36 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        height: 2,
-                        color: Colors.black,
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(
-                        'atau',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        height: 2,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
+                // Google Sign-In Button
                 GestureDetector(
-                  onTap: () async {
-                    await FirebaseServices().signInWithGoogle();
-                    // Set login state for Google Sign In
-                    SharedPreferences prefs =
-                        await SharedPreferences.getInstance();
-                    await prefs.setBool('isLoggedIn', true);
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MyHomePage(
-                          title: 'Monitoring Tambak Udang',
+                  onTap: () {
+                    // Check if the Tambak ID is empty
+                    if (tambakIdController.text.isEmpty) {
+                      showSnackBar(context, "ID Tambak tidak boleh kosong.");
+                      return;
+                    }
+
+                    // Check if the Tambak ID is correct
+                    if (tambakIdController.text != '002543') {
+                      showSnackBar(context, "ID Tambak tidak valid.");
+                      return;
+                    }
+
+                    // Proceed with Google Sign-In
+                    FirebaseServices().signInWithGoogle().then((_) async {
+                      // Set login state for Google Sign In
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      await prefs.setBool('isLoggedIn', true);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MyHomePage(
+                            title: 'Monitoring Tambak Udang',
+                          ),
                         ),
-                      ),
-                    );
+                      );
+                    });
                   },
                   child: Container(
                     width: double.infinity,
@@ -430,22 +419,39 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => SignupScreen(),
+                // Row for Lupa Sandi and Daftar buttons
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: showForgotPasswordDialog,
+                      child: const Text(
+                        'Lupa sandi?',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    );
-                  },
-                  child: const Text(
-                    "Belum punya akun? Daftar",
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
                     ),
-                  ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => SignupScreen(),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        "Belum punya akun? Daftar",
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
+                const SizedBox(height: 20),
               ],
             ),
           ),
