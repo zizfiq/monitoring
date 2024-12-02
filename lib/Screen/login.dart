@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:monitoring/Login%20With%20Google/google_auth.dart';
@@ -8,7 +6,7 @@ import '../Services/authentication.dart';
 import '../Widget/snackbar.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'signup.dart';
+import 'signup.dart'; // ignore_for_file: use_build_context_synchronously
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -27,6 +25,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final FlutterSecureStorage storage = const FlutterSecureStorage();
 
   bool isLoading = false;
+  bool _obscureText = true; // State untuk show/hide password
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText; // Toggle the password visibility
+    });
+  }
 
   @override
   void dispose() {
@@ -309,13 +314,22 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   child: TextField(
                     controller: passwordController,
-                    obscureText: true,
-                    decoration: const InputDecoration(
+                    obscureText: _obscureText, // Use the state for visibility
+                    decoration: InputDecoration(
                       hintText: 'Masukkan sandi',
-                      prefixIcon: Icon(Icons.lock),
+                      prefixIcon: const Icon(Icons.lock),
                       border: InputBorder.none,
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscureText
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                        onPressed:
+                            _togglePasswordVisibility, // Toggle visibility
+                      ),
                     ),
                   ),
                 ),

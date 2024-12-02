@@ -1,10 +1,9 @@
-// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, use_build_context_synchronously, avoid_print
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../Screen/login.dart'; // Import your login screen
 import '../Widget/snackbar.dart'; // Import your snackbar widget
+// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, use_build_context_synchronously, avoid_print
 
 class SignupScreen extends StatefulWidget {
   @override
@@ -19,6 +18,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   bool _isLoading = false;
+  bool _obscureText = true; // State untuk show/hide password
 
   void signupUser() async {
     setState(() {
@@ -61,6 +61,12 @@ class _SignupScreenState extends State<SignupScreen> {
         _isLoading = false;
       });
     }
+  }
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText; // Toggle the password visibility
+    });
   }
 
   @override
@@ -154,13 +160,22 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                   child: TextField(
                     controller: passwordController,
-                    obscureText: true,
-                    decoration: const InputDecoration(
+                    obscureText: _obscureText, // Use the state for visibility
+                    decoration: InputDecoration(
                       hintText: 'Masukkan sandi',
-                      prefixIcon: Icon(Icons.lock),
+                      prefixIcon: const Icon(Icons.lock),
                       border: InputBorder.none,
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscureText
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                        onPressed:
+                            _togglePasswordVisibility, // Toggle visibility
+                      ),
                     ),
                   ),
                 ),
@@ -197,22 +212,6 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const LoginScreen(),
-                      ),
-                    );
-                  },
-                  child: const Text(
-                    "Sudah punya akun? Masuk",
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
               ],
             ),
           ),
