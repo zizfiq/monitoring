@@ -27,31 +27,16 @@ class _ProfilePageState extends State<ProfilePage> {
     currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
       setState(() {
-        // Use display name from Firebase, or fallback to email
         displayName = currentUser!.displayName ?? 'Admin Tambak';
         email = currentUser!.email ?? 'No email';
-
-        // Use profile photo from Firebase if available
         profileImageUrl = currentUser!.photoURL;
       });
     }
   }
 
-  Future<void> _openInstagram(BuildContext context) async {
-    const url = 'https://www.instagram.com/fiqri.aaziz/';
-    try {
-      if (await canLaunch(url)) {
-        await launch(url);
-      } else {
-        throw 'Could not launch $url';
-      }
-    } catch (e) {
-      print('Error launching URL: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Could not open Instagram. Please try again later.')),
-      );
-    }
+  void _launchUrl(String url, BuildContext context) {
+    final Uri uri = Uri.parse(url);
+    launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 
   Widget _buildProfileButton({
@@ -192,32 +177,40 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               const SizedBox(height: 24),
               _buildProfileButton(
-                text: 'Help & support',
+                text: 'Help & Support',
                 icon: Icons.help_outline_rounded,
-                onTap: () => _openInstagram(context),
+                onTap: () => _launchUrl(
+                  'mailto:fiqri.aaziz@gmail.com?subject=Help%20&%20Support&body=Please%20provide%20your%20message%20here.',
+                  context,
+                ),
               ),
               const SizedBox(height: 16),
               _buildProfileButton(
                 text: 'Send feedback',
                 icon: Icons.feedback_outlined,
-                onTap: () {
-                  // Implement feedback functionality here
-                },
+                onTap: () => _launchUrl(
+                  'https://wa.me/6285158560066',
+                  context,
+                ),
+              ),
+              const SizedBox(height: 16),
+              _buildProfileButton(
+                text: 'About developer',
+                icon: Icons.person,
+                onTap: () => _launchUrl(
+                  'https://www.linkedin.com/in/fiqriabdulaziz',
+                  context,
+                ),
               ),
               const SizedBox(height: 16),
               _buildProfileButton(
                 text: 'Log out',
                 icon: Icons.logout_rounded,
                 onTap: () async {
-                  // Clear SharedPreferences login status
                   SharedPreferences prefs =
                       await SharedPreferences.getInstance();
                   await prefs.setBool('isLoggedIn', false);
-
-                  // Sign out from Firebase
                   await FirebaseAuth.instance.signOut();
-
-                  // Navigate to LoginScreen and remove all previous routes
                   Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(
                         builder: (context) => const LoginScreen()),
