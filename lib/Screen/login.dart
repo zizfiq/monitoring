@@ -3,8 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:monitoring/Login%20With%20Google/google_auth.dart';
 import 'package:monitoring/Screen/home.dart';
 import '../Services/authentication.dart';
-import '../Widget/snackbar.dart'; // ignore_for_file: use_build_context_synchronously
+import '../Widget/snackbar.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'signup.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -60,6 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
         email: emailController.text, password: passwordController.text);
 
     if (res == "success") {
+      // Store login credentials if remember me is checked
       if (rememberMe) {
         await storage.write(key: 'email', value: emailController.text);
         await storage.write(key: 'password', value: passwordController.text);
@@ -67,6 +69,10 @@ class _LoginScreenState extends State<LoginScreen> {
         await storage.delete(key: 'email');
         await storage.delete(key: 'password');
       }
+
+      // Set login state
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLoggedIn', true);
 
       setState(() {
         isLoading = false;
@@ -332,15 +338,19 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ],
                     ),
-                    child: const Center(
-                      child: Text(
-                        'MASUK',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                    child: Center(
+                      child: isLoading
+                          ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                          : const Text(
+                              'MASUK',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                     ),
                   ),
                 ),
@@ -372,6 +382,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 GestureDetector(
                   onTap: () async {
                     await FirebaseServices().signInWithGoogle();
+                    // Set login state for Google Sign In
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    await prefs.setBool('isLoggedIn', true);
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
