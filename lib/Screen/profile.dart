@@ -13,10 +13,9 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   late User? currentUser;
-  String displayName = 'User';
+  String displayName = 'Admin Tambak';
   String email = '';
-  String profileImageUrl =
-      'https://static.wikia.nocookie.net/gensin-impact/images/2/24/Raiden_Shogun_Icon.png/revision/latest?cb=20240717072843';
+  String? profileImageUrl;
 
   @override
   void initState() {
@@ -29,13 +28,11 @@ class _ProfilePageState extends State<ProfilePage> {
     if (currentUser != null) {
       setState(() {
         // Use display name from Firebase, or fallback to email
-        displayName = currentUser!.displayName ?? 'User';
+        displayName = currentUser!.displayName ?? 'Admin Tambak';
         email = currentUser!.email ?? 'No email';
 
         // Use profile photo from Firebase if available
-        if (currentUser!.photoURL != null) {
-          profileImageUrl = currentUser!.photoURL!;
-        }
+        profileImageUrl = currentUser!.photoURL;
       });
     }
   }
@@ -132,16 +129,23 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(50),
-                        child: Image.network(
-                          profileImageUrl,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Image.network(
-                              'https://static.wikia.nocookie.net/gensin-impact/images/2/24/Raiden_Shogun_Icon.png/revision/latest?cb=20240717072843',
-                              fit: BoxFit.cover,
-                            );
-                          },
-                        ),
+                        child: profileImageUrl != null
+                            ? Image.network(
+                                profileImageUrl!,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Icon(
+                                    Icons.person,
+                                    size: 80,
+                                    color: Colors.grey,
+                                  );
+                                },
+                              )
+                            : const Icon(
+                                Icons.person,
+                                size: 80,
+                                color: Colors.grey,
+                              ),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -202,7 +206,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               const SizedBox(height: 16),
               _buildProfileButton(
-                text: 'Sign out',
+                text: 'Log out',
                 icon: Icons.logout_rounded,
                 onTap: () async {
                   // Clear SharedPreferences login status
