@@ -1,36 +1,33 @@
-import 'package:firebase_auth/firebase_auth.dart'; // ignore_for_file: avoid_print
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseServices {
   final auth = FirebaseAuth.instance;
   final googleSignIn = GoogleSignIn();
 
-  // Sign in with Google
   Future<void> signInWithGoogle() async {
     try {
-      // Disconnect any existing session
-      await googleSignIn.disconnect();
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      if (googleUser == null) return;
 
-      // Prompt the user to select an account
-      final GoogleSignInAccount? googleSignInAccount =
-          await googleSignIn.signIn();
-      if (googleSignInAccount != null) {
-        final GoogleSignInAuthentication googleSignInAuthentication =
-            await googleSignInAccount.authentication;
-        final AuthCredential authCredential = GoogleAuthProvider.credential(
-          accessToken: googleSignInAuthentication.accessToken,
-          idToken: googleSignInAuthentication.idToken,
-        );
-        await auth.signInWithCredential(authCredential);
-      }
-    } on FirebaseAuthException catch (e) {
-      print(e.toString());
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // Sign in with the credential
+      await auth.signInWithCredential(credential);
+
+      // Optionally, navigate to the next screen after successful login
+      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
     } catch (e) {
-      print("Error: $e");
+      print("Google Sign-In Error: $e");
+      // Handle sign-in failure
     }
   }
 
-  // Sign out from Google
   Future<void> googleSignOut() async {
     await googleSignIn.signOut();
     await auth.signOut();
