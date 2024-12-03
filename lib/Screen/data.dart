@@ -76,7 +76,7 @@ class _DataPageState extends State<DataPage> {
     }
 
     final directory = await getApplicationDocumentsDirectory();
-    final path = '${directory.path}/feeding_data.csv';
+    final path = '${directory.path}/Data_Tambak_udang.csv';
     final file = File(path);
     await file.writeAsString(csvData);
 
@@ -121,22 +121,51 @@ class _DataPageState extends State<DataPage> {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: const Text('Hapus Semua Data'),
+                  title: const Text(
+                    'Hapus Semua Data',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
                   content: const Text(
-                      'Apakah Anda yakin ingin menghapus semua data?'),
+                    'Apakah Anda yakin ingin menghapus semua data?',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    side: BorderSide(color: Colors.grey.shade400, width: 2),
+                  ),
+                  backgroundColor: Colors.white,
                   actions: [
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: const Text('Batal'),
+                      child: const Text(
+                        'Batal',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                     TextButton(
                       onPressed: () {
                         _deleteAllData();
                         Navigator.of(context).pop();
                       },
-                      child: const Text('Hapus'),
+                      child: const Text(
+                        'Hapus',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ],
                 ),

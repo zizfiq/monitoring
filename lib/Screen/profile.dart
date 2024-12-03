@@ -159,7 +159,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: const Text(
-                        'Administrator',
+                        'Pengelola',
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w500,
@@ -179,7 +179,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               const SizedBox(height: 24),
               _buildProfileButton(
-                text: 'Help & Support',
+                text: 'Bantuan & Dukungan',
                 icon: Icons.help_outline_rounded,
                 onTap: () => _launchUrl(
                   'mailto:fiqri.aaziz@gmail.com?subject=Help%20&%20Support&body=Please%20provide%20your%20message%20here.',
@@ -188,7 +188,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               const SizedBox(height: 16),
               _buildProfileButton(
-                text: 'Send feedback',
+                text: 'Kirim umpan balik',
                 icon: Icons.feedback_outlined,
                 onTap: () => _launchUrl(
                   'https://wa.me/6285158560066',
@@ -197,7 +197,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               const SizedBox(height: 16),
               _buildProfileButton(
-                text: 'About developer',
+                text: 'Tentang pengembang',
                 icon: Icons.person,
                 onTap: () => _launchUrl(
                   'https://www.linkedin.com/in/fiqriabdulaziz',
@@ -206,7 +206,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               const SizedBox(height: 16),
               _buildProfileButton(
-                text: 'Log out',
+                text: 'Keluar',
                 icon: Icons.logout_rounded,
                 onTap: () async {
                   SharedPreferences prefs =
