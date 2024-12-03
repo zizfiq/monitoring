@@ -264,7 +264,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: tambakIdController,
                     decoration: const InputDecoration(
                       hintText: 'Masukkan ID Tambak',
-                      prefixIcon: Icon(Icons.confirmation_number),
+                      prefixIcon: Icon(Icons.qr_code_2),
                       border: InputBorder.none,
                       contentPadding:
                           EdgeInsets.symmetric(horizontal: 16, vertical: 12),
