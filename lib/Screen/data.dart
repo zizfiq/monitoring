@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 
 class DataPage extends StatefulWidget {
   const DataPage({super.key});
@@ -80,7 +80,7 @@ class _DataPageState extends State<DataPage> {
     final file = File(path);
     await file.writeAsString(csvData);
 
-    Share.shareFiles([path], text: 'Data Pakan');
+    Share.shareXFiles([XFile(path)], text: 'Data Pakan');
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Data telah diekspor ke CSV')),
