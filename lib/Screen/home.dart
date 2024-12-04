@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 // import 'package:monitoring/Backup/notification.dart';
 import 'package:monitoring/Screen/profile.dart';
 import 'package:monitoring/Screen/data.dart';
+import 'package:monitoring/Widget/snackbar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -44,6 +46,10 @@ class _MyHomePageState extends State<MyHomePage> {
   final String apiKey = 'AIzaSyC9kIkLAGkB0xIS31vXQ8mtqMXED9TnSQc';
   final String databaseUrl =
       'https://monitoring-2f6fc-default-rtdb.asia-southeast1.firebasedatabase.app';
+
+  // New variable to hold feed amount input
+  final TextEditingController _feedAmountController = TextEditingController();
+  final FocusNode _focusNode = FocusNode(); // FocusNode for the TextField
 
   @override
   void initState() {
@@ -122,6 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void dispose() {
     _timer?.cancel();
+    _feedAmountController.dispose(); // Dispose the controller
     super.dispose();
   }
 
@@ -193,17 +200,6 @@ class _MyHomePageState extends State<MyHomePage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        /*actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined, color: Colors.black),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => NotificationPage()),
-              );
-            },
-          ),
-        ],*/
       ),
       body: sensorData.isEmpty
           ? const Center(child: CircularProgressIndicator())
@@ -317,12 +313,42 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
                         const SizedBox(height: 12),
+                        // New TextField for feed amount input
+                        TextField(
+                          controller: _feedAmountController,
+                          focusNode: _focusNode, // Assign the FocusNode
+                          decoration: const InputDecoration(
+                            labelText: 'Jumlah Pakan (gram)',
+                            labelStyle: TextStyle(color: Colors.grey),
+                            border: OutlineInputBorder(),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black),
+                            ),
+                          ),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter
+                                .digitsOnly, // Allow only digits
+                          ],
+                          cursorColor: Colors.black,
+                        ),
+                        const SizedBox(height: 12),
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: isButtonDisabled || isButtonPressed
                                 ? null
                                 : () async {
+                                    // Check if feed amount is empty
+                                    if (_feedAmountController.text.isEmpty) {
+                                      // Show snackbar if empty
+                                      showSnackBar(context,
+                                          'Silakan masukkan jumlah pakan terlebih dahulu.');
+                                      return;
+                                    }
                                     isButtonPressed = true;
                                     await _activateServo();
                                     final response = await http.get(Uri.parse(
@@ -340,7 +366,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                             '$databaseUrl/feedingData/$timeKey.json?auth=$apiKey'),
                                         body: json.encode({
                                           'timestamp': now.toIso8601String(),
-                                          'feedAmount': 300,
+                                          'feedAmount': int.tryParse(
+                                                  _feedAmountController.text) ??
+                                              0,
                                           'temperature':
                                               sensorData['Temperature']
                                                       ?.toDouble() ??
@@ -356,6 +384,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                     await Future.delayed(
                                         const Duration(seconds: 2));
                                     isButtonPressed = false;
+
+                                    // Clear the feed amount input field and reset to initial state
+                                    _feedAmountController.clear();
+                                    _focusNode
+                                        .unfocus(); // Remove focus from the TextField
                                   },
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
@@ -365,7 +398,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                                 side: const BorderSide(
-                                    color: Colors.black, width: 2),
+                                    color: Colors.black, width: 1),
                               ),
                               elevation: 4,
                             ),
