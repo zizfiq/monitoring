@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:async'; // ignore_for_file: avoid_print
+import 'dart:async';
 import 'dart:convert';
-import 'package:monitoring/Screen/notification.dart';
+// import 'package:monitoring/Backup/notification.dart';
 import 'package:monitoring/Screen/profile.dart';
 import 'package:monitoring/Screen/data.dart';
 
@@ -193,7 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        actions: [
+        /*actions: [
           IconButton(
             icon: const Icon(Icons.notifications_outlined, color: Colors.black),
             onPressed: () {
@@ -203,7 +203,7 @@ class _MyHomePageState extends State<MyHomePage> {
               );
             },
           ),
-        ],
+        ],*/
       ),
       body: sensorData.isEmpty
           ? const Center(child: CircularProgressIndicator())

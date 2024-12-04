@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../Screen/login.dart'; // Import your login screen
 import '../Widget/snackbar.dart'; // Import your snackbar widget
-// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, use_build_context_synchronously, avoid_print
 
 class SignupScreen extends StatefulWidget {
   @override

@@ -6,7 +6,7 @@ import '../Services/authentication.dart';
 import '../Widget/snackbar.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'signup.dart'; // ignore_for_file: use_build_context_synchronously
+import 'signup.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
