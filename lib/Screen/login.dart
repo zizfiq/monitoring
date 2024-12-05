@@ -371,34 +371,44 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 20),
                 // Google Sign-In Button
                 GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     // Check if the Tambak ID is empty
                     if (tambakIdController.text.isEmpty) {
                       showSnackBar(context, "ID Tambak tidak boleh kosong.");
                       return;
                     }
-
                     // Check if the Tambak ID is correct
                     if (tambakIdController.text != '002543') {
                       showSnackBar(context, "ID Tambak tidak valid.");
                       return;
                     }
 
-                    // Proceed with Google Sign-In
-                    FirebaseServices().signInWithGoogle().then((_) async {
-                      // Set login state for Google Sign In
-                      SharedPreferences prefs =
-                          await SharedPreferences.getInstance();
-                      await prefs.setBool('isLoggedIn', true);
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MyHomePage(
-                            title: 'Monitoring Tambak Udang',
+                    try {
+                      // Attempt Google Sign-In and check if it was successful
+                      bool loginSuccess =
+                          await FirebaseServices().signInWithGoogle();
+
+                      if (loginSuccess) {
+                        // Set login state for Google Sign In
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        await prefs.setBool('isLoggedIn', true);
+
+                        // Navigate to the home page
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MyHomePage(
+                              title: 'Monitoring Tambak Udang',
+                            ),
                           ),
-                        ),
-                      );
-                    });
+                        );
+                      } else {}
+                    } catch (error) {
+                      // Handle error if sign-in fails
+                      showSnackBar(
+                          context, "Login dibatalkan atau terjadi kesalahan.");
+                    }
                   },
                   child: Container(
                     width: double.infinity,

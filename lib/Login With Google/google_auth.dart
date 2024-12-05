@@ -5,13 +5,13 @@ class FirebaseServices {
   final FirebaseAuth auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
-  Future<void> signInWithGoogle() async {
+  Future<bool> signInWithGoogle() async {
     try {
-      // Memastikan pengguna memilih akun setiap kali
-      await googleSignIn.signOut(); // Keluar dari akun yang ada sebelumnya
+      // Ensure the user selects an account each time
+      await googleSignIn.signOut(); // Sign out from the previous account
 
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-      if (googleUser == null) return; // Jika pengguna membatalkan login
+      if (googleUser == null) return false; // User canceled the login
 
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
@@ -20,14 +20,17 @@ class FirebaseServices {
         idToken: googleAuth.idToken,
       );
 
-      // Melakukan sign-in dengan kredensial yang didapat
+      // Sign in with the obtained credentials
       await auth.signInWithCredential(credential);
 
-      // Simpan atau validasi informasi pengguna
-      // Potensial untuk memeriksa terhadap whitelist atau database
+      // Optionally, save or validate user information
+      // Potentially check against a whitelist or database
+
+      return true; // Sign-in successful
     } catch (e) {
       print("Google Sign-In Error: $e");
-      // Tangani kegagalan sign-in
+      // Handle sign-in failure
+      return false; // Sign-in failed
     }
   }
 
