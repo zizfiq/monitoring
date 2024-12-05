@@ -180,7 +180,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 text: 'Bantuan & Dukungan',
                 icon: Icons.help_outline_rounded,
                 onTap: () => _launchUrl(
-                  'mailto:fiqri.aaziz@gmail.com?subject=Help%20&%20Support&body=Please%20provide%20your%20message%20here.',
+                  'mailto:fiqri.aaziz@gmail.com?subject=Laporan%20Bug%20&%20Support&body=Tuliskan%20kendala%20anda%20disini%20here.',
                   context,
                 ),
               ),

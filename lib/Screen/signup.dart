@@ -54,7 +54,7 @@ class _SignupScreenState extends State<SignupScreen> {
     } catch (e) {
       print(e);
       // Handle errors (e.g., show a snackbar)
-      showSnackBar(context, e.toString());
+      showSnackBar(context, "Email sudah terdaftar");
     } finally {
       setState(() {
         _isLoading = false;

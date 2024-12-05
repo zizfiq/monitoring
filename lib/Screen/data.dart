@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:share_plus/share_plus.dart';
+import 'package:monitoring/Widget/snackbar.dart';
 
 class DataPage extends StatefulWidget {
   const DataPage({super.key});
@@ -54,7 +55,7 @@ class _DataPageState extends State<DataPage> {
         feedingData.clear();
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Semua data telah dihapus')),
+        const SnackBar(content: Text('Data telah diekspor ke CSV')),
       );
     } else {
       print('Failed to delete data');
@@ -63,9 +64,7 @@ class _DataPageState extends State<DataPage> {
 
   Future<void> _exportDataToCSV() async {
     if (feedingData.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Tidak ada data untuk diekspor')),
-      );
+      showSnackBar(context, 'Tidak ada data untuk diekspor');
       return;
     }
 
@@ -82,9 +81,7 @@ class _DataPageState extends State<DataPage> {
 
     Share.shareXFiles([XFile(path)], text: 'Data Pakan');
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Data telah diekspor ke CSV')),
-    );
+    showSnackBar(context, 'Data telah diekspor ke CSV');
   }
 
   String _formatDateTime(DateTime dateTime) {
@@ -111,7 +108,7 @@ class _DataPageState extends State<DataPage> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.download, color: Colors.green),
+            icon: const Icon(Icons.upload, color: Colors.green),
             onPressed: _exportDataToCSV,
             tooltip: 'Ekspor Data ke CSV',
           ),

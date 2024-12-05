@@ -45,7 +45,7 @@ class AuthMethod {
         );
         res = "success";
       } else {
-        res = "Please enter all the fields";
+        res = "Harap mengisi semua bidang";
       }
     } catch (err) {
       return err.toString();

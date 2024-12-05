@@ -346,7 +346,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     if (_feedAmountController.text.isEmpty) {
                                       // Show snackbar if empty
                                       showSnackBar(context,
-                                          'Silakan masukkan jumlah pakan terlebih dahulu.');
+                                          'Silakan masukkan jumlah pakan terlebih dahulu');
                                       return;
                                     }
                                     isButtonPressed = true;

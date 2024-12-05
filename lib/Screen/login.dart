@@ -99,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         isLoading = false;
       });
-      showSnackBar(context, res);
+      showSnackBar(context, "Email atau kata sandi salah.");
     }
   }
 
@@ -374,12 +374,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   onTap: () async {
                     // Check if the Tambak ID is empty
                     if (tambakIdController.text.isEmpty) {
-                      showSnackBar(context, "ID Tambak tidak boleh kosong.");
+                      showSnackBar(context, "ID Tambak tidak boleh kosong");
                       return;
                     }
                     // Check if the Tambak ID is correct
                     if (tambakIdController.text != '002543') {
-                      showSnackBar(context, "ID Tambak tidak valid.");
+                      showSnackBar(context, "ID Tambak tidak valid");
                       return;
                     }
 
@@ -407,7 +407,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     } catch (error) {
                       // Handle error if sign-in fails
                       showSnackBar(
-                          context, "Login dibatalkan atau terjadi kesalahan.");
+                          context, "Login dibatalkan atau terjadi kesalahan");
                     }
                   },
                   child: Container(

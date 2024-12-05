@@ -90,10 +90,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           .then((value) {
                         // if success then show this message
                         showSnackBar(context,
-                            "We have send you the reset password link to your email id, Please check it");
+                            "Kami telah mengirimkan tautan reset kata sandi ke alamat email Anda");
                       }).onError((error, stackTrace) {
                         // if unsuccess then show error message
-                        showSnackBar(context, error.toString());
+                        showSnackBar(
+                            context, "Email tidak terdaftar di sistem");
                       });
                       // terminate the dialog after send the forgot password link
                       Navigator.pop(context);
