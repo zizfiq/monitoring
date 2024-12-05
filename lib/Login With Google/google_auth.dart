@@ -2,35 +2,35 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseServices {
-  final auth = FirebaseAuth.instance;
-  final googleSignIn = GoogleSignIn();
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  final GoogleSignIn googleSignIn = GoogleSignIn();
 
-  // Sign in with Google
   Future<void> signInWithGoogle() async {
     try {
-      // Disconnect any existing session
-      await googleSignIn.disconnect();
+      // Memastikan pengguna memilih akun setiap kali
+      await googleSignIn.signOut(); // Keluar dari akun yang ada sebelumnya
 
-      // Prompt the user to select an account
-      final GoogleSignInAccount? googleSignInAccount =
-          await googleSignIn.signIn();
-      if (googleSignInAccount != null) {
-        final GoogleSignInAuthentication googleSignInAuthentication =
-            await googleSignInAccount.authentication;
-        final AuthCredential authCredential = GoogleAuthProvider.credential(
-          accessToken: googleSignInAuthentication.accessToken,
-          idToken: googleSignInAuthentication.idToken,
-        );
-        await auth.signInWithCredential(authCredential);
-      }
-    } on FirebaseAuthException catch (e) {
-      print(e.toString());
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      if (googleUser == null) return; // Jika pengguna membatalkan login
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // Melakukan sign-in dengan kredensial yang didapat
+      await auth.signInWithCredential(credential);
+
+      // Simpan atau validasi informasi pengguna
+      // Potensial untuk memeriksa terhadap whitelist atau database
     } catch (e) {
-      print("Error: $e");
+      print("Google Sign-In Error: $e");
+      // Tangani kegagalan sign-in
     }
   }
 
-  // Sign out from Google
   Future<void> googleSignOut() async {
     await googleSignIn.signOut();
     await auth.signOut();

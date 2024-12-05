@@ -211,6 +211,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       await SharedPreferences.getInstance();
                   await prefs.setBool('isLoggedIn', false);
                   await FirebaseAuth.instance.signOut();
+
+                  // Menambahkan delay 1 detik sebelum berpindah ke halaman login
+                  await Future.delayed(const Duration(seconds: 1));
+
                   Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(
                         builder: (context) => const LoginScreen()),
