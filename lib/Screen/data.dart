@@ -54,9 +54,7 @@ class _DataPageState extends State<DataPage> {
       setState(() {
         feedingData.clear();
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Data telah diekspor ke CSV')),
-      );
+      showSnackBar(context, 'Data berhasil dihapus');
     } else {
       print('Failed to delete data');
     }

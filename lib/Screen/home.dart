@@ -381,14 +381,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                         }),
                                       );
                                     }
-                                    await Future.delayed(
-                                        const Duration(seconds: 2));
-                                    isButtonPressed = false;
-
                                     // Clear the feed amount input field and reset to initial state
                                     _feedAmountController.clear();
                                     _focusNode
                                         .unfocus(); // Remove focus from the TextField
+                                    await Future.delayed(
+                                        const Duration(seconds: 2));
+                                    isButtonPressed = false;
                                   },
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
