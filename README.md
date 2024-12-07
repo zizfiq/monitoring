@@ -15,9 +15,10 @@ Aplikasi **Monitoring Tambak Udang** adalah solusi pintar berbasis Flutter yang 
 - **REST API**: Komunikasi antara aplikasi dan perangkat IoT.
 
 ## 📱 Screenshot Aplikasi
-| Dashboard | Data | Profil |
-|-----------|------------|-------------|
-| ![Dashboard](images/dashboard.png) | ![Data](images/data.png) | ![Profil](images/profil.png) |
+
+| Dashboard                  | Data                     | Profil                   | Login                   | Sign Up                 |
+|----------------------------|--------------------------|--------------------------|-------------------------|-------------------------|
+| ![Dashboard](images/dashboard.jpg) | ![Data](images/data.jpg) | ![Profil](images/profile.jpg) | ![Login](images/login.jpg) | ![SignUp](images/signup.jpg) |
 
 ## 🚀 Instalasi
 1. **Clone repository**:
