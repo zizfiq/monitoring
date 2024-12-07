@@ -5,19 +5,20 @@ Aplikasi **Monitoring Tambak Udang** adalah solusi pintar berbasis Flutter yang 
 ## ✨ Fitur Utama
 - **Pemantauan Real-Time**: Pantau suhu, pH, TDS, dan EC air tambak langsung dari aplikasi.
 - **Riwayat Data**: Lihat riwayat parameter tambak untuk analisis mendalam.
-- **Kendali IoT**: Kendalikan perangkat tambak seperti pompa dan aerator melalui aplikasi.
+- **Kendali IoT**: Kendalikan perangkat tambak seperti pemberi pakan pada anco melalui aplikasi.
 - **Tampilan Modern**: Antarmuka pengguna yang bersih, intuitif, dan responsif.
 
 ## 🛠️ Teknologi yang Digunakan
 - **Flutter**: Framework utama untuk pengembangan aplikasi mobile.
 - **Firebase**: Backend real-time untuk pengelolaan database dan autentikasi.
-- **ESP32**: Mikrokontroler untuk menghubungkan sensor ke aplikasi melalui protokol HTTP atau MQTT.
+- **ESP32**: Mikrokontroler untuk menghubungkan sensor ke aplikasi melalui protokol HTTP.
 - **REST API**: Komunikasi antara aplikasi dan perangkat IoT.
 
 ## 📱 Screenshot Aplikasi
-| Dashboard | Data | Profil |
-|-----------|------------|-------------|
-| ![Dashboard](images/dashboard.png) | ![Data](images/data.png) | ![Profil](images/profil.png) |
+
+| Dashboard                  | Data                     | Profil                   | Login                   | Sign Up                 |
+|----------------------------|--------------------------|--------------------------|-------------------------|-------------------------|
+| ![Dashboard](images/dashboard.jpg) | ![Data](images/data.jpg) | ![Profil](images/profile.jpg) | ![Login](images/login.jpg) | ![SignUp](images/signup.jpg) |
 
 ## 🚀 Instalasi
 1. **Clone repository**:
@@ -50,7 +51,7 @@ Aplikasi **Monitoring Tambak Udang** adalah solusi pintar berbasis Flutter yang 
 1. **Sensor IoT**: ESP32 membaca data dari sensor yang terhubung di tambak.
 2. **Pengiriman Data**: Data sensor dikirimkan ke Firebase secara berkala.
 3. **Pemantauan Aplikasi**: Aplikasi Flutter menampilkan data secara real-time melalui dashboard.
-4. **Kontrol IoT**: Pengguna dapat mengontrol perangkat tambak, seperti pompa dan aerator, langsung dari aplikasi.
+4. **Kontrol IoT**: Pengguna dapat mengontrol perangkat tambak yaitu servo dalam memberi pakan pada anco langsung dari aplikasi.
 
 ---
 
