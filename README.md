@@ -16,9 +16,9 @@ Aplikasi **Monitoring Tambak Udang** adalah solusi pintar berbasis Flutter yang 
 
 ## 📱 Screenshot Aplikasi
 
-| Dashboard                  | Data                     | Profil                   | Login                   | Sign Up                 |
-|----------------------------|--------------------------|--------------------------|-------------------------|-------------------------|
-| ![Dashboard](images/dashboard.jpg) | ![Data](images/data.jpg) | ![Profil](images/profile.jpg) | ![Login](images/login.jpg) | ![SignUp](images/signup.jpg) |
+| Dashboard                          | Data                               | Profil                             | Login                             | Sign Up                            |
+|------------------------------------|------------------------------------|------------------------------------|-----------------------------------|------------------------------------|
+| ![Dashboard](images/dashboard.jpg) |     ![Data](images/data.jpg)       |   ![Profil](images/profile.jpg)    |    ![Login](images/login.jpg)     |    ![SignUp](images/signup.jpg)    |
 
 ## 🚀 Instalasi
 1. **Clone repository**:
@@ -67,7 +67,7 @@ Aplikasi **Monitoring Tambak Udang** adalah solusi pintar berbasis Flutter yang 
 
 ## 🤝 Kontribusi
 
-Kami terbuka untuk kontribusi dari siapa saja. Jika Anda menemukan bug atau memiliki ide untuk fitur baru, silakan:
+Pengembang sangat terbuka untuk kontribusi dari siapa saja. Jika Anda menemukan bug atau memiliki ide untuk fitur baru, silakan:
 - Ajukan **issue** di repository ini.
 - Buat **pull request** dengan perubahan yang diusulkan.
 
