@@ -23,3 +23,56 @@ Aplikasi **Monitoring Tambak Udang** adalah solusi pintar berbasis Flutter yang 
 1. **Clone repository**:
    ```bash
    git clone https://github.com/username/monitoring-tambak-udang.git
+2. **Masuk ke direktori project: Pindah ke direktori project yang sudah di-clone**:
+   ```bash
+   cd monitoring-tambak-udang
+3. **Install dependencies**:
+   ```bash
+   flutter pub get
+4. **Jalankan aplikasi**:
+   ```bash
+   flutter run
+
+## ⚙️ Konfigurasi
+
+1. **Firebase**:
+   - Tambahkan file `google-services.json` (untuk Android) dan/atau `GoogleService-Info.plist` (untuk iOS) ke direktori masing-masing platform.
+   - Konfigurasikan **Realtime Database** atau **Firestore** untuk menyimpan data sensor tambak.
+
+2. **ESP32**:
+   - Upload kode ESP32 untuk membaca data dari sensor (suhu, pH, TDS, EC) dan mengirimkannya ke Firebase.
+   - Gunakan protokol **HTTP** untuk komunikasi data antara ESP32 dan aplikasi.
+
+---
+
+## 📖 Cara Kerja
+
+1. **Sensor IoT**: ESP32 membaca data dari sensor yang terhubung di tambak.
+2. **Pengiriman Data**: Data sensor dikirimkan ke Firebase secara berkala.
+3. **Pemantauan Aplikasi**: Aplikasi Flutter menampilkan data secara real-time melalui dashboard.
+4. **Notifikasi**: Firebase mengirimkan notifikasi jika parameter air tidak sesuai standar.
+5. **Kontrol IoT**: Pengguna dapat mengontrol perangkat tambak, seperti pompa dan aerator, langsung dari aplikasi.
+
+---
+
+## 📋 Roadmap
+
+- [x] Pemantauan sensor real-time.
+- [x] Push notification.
+- [x] Kendali perangkat IoT.
+- [ ] Mode offline untuk data tambak.
+- [ ] Integrasi AI untuk analisis parameter tambak.
+
+---
+
+## 🤝 Kontribusi
+
+Kami terbuka untuk kontribusi dari siapa saja. Jika Anda menemukan bug atau memiliki ide untuk fitur baru, silakan:
+- Ajukan **issue** di repository ini.
+- Buat **pull request** dengan perubahan yang diusulkan.
+
+---
+
+## 📄 Lisensi
+
+Proyek ini dilisensikan di bawah [MIT License](LICENSE).
