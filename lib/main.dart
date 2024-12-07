@@ -1,26 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:monitoring/Screen/login.dart';
-import 'package:monitoring/Screen/home.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:monitoring/Screen/splash.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-
-  runApp(MyApp(
-      startingPage: isLoggedIn
-          ? const MyHomePage(title: 'Monitoring Tambak Udang')
-          : const LoginScreen()));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final Widget startingPage;
-
-  const MyApp({super.key, required this.startingPage});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +20,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         useMaterial3: true,
       ),
-      home: startingPage,
+      home: const SplashScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
