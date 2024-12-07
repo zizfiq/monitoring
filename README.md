@@ -24,7 +24,7 @@ Aplikasi **Monitoring Tambak Udang** adalah solusi pintar berbasis Flutter yang 
 ## 🚀 Instalasi
 1. **Clone repository**:
    ```bash
-   git clone https://github.com/username/monitoring-tambak-udang.git
+   git clone https://github.com/zizfiq/monitoring.git
 2. **Masuk ke direktori project: Pindah ke direktori project yang sudah di-clone**:
    ```bash
    cd monitoring-tambak-udang
