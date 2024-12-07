@@ -62,7 +62,6 @@ Aplikasi **Monitoring Tambak Udang** adalah solusi pintar berbasis Flutter yang 
 - [x] Kendali perangkat IoT.
 - [ ] Push notification.
 - [ ] Mode offline untuk data tambak.
-- [ ] Integrasi AI untuk analisis parameter tambak.
 
 ---
 
