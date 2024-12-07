@@ -1,16 +1,25 @@
-# monitoring
+# 🌊 Monitoring Tambak Udang 🦐
 
-A new Flutter project.
+Aplikasi **Monitoring Tambak Udang** adalah solusi pintar berbasis Flutter yang dirancang untuk memantau kondisi tambak udang secara real-time. Dengan integrasi **Firebase** dan perangkat IoT menggunakan **ESP32**, aplikasi ini memberikan kemudahan bagi petambak dalam menjaga kualitas air tambak untuk mendukung pertumbuhan udang yang optimal.
 
-## Getting Started
+## ✨ Fitur Utama
+- **Pemantauan Real-Time**: Pantau suhu, pH, TDS, dan EC air tambak langsung dari aplikasi.
+- **Riwayat Data**: Lihat riwayat parameter tambak untuk analisis mendalam.
+- **Kendali IoT**: Kendalikan perangkat tambak seperti pompa dan aerator melalui aplikasi.
+- **Tampilan Modern**: Antarmuka pengguna yang bersih, intuitif, dan responsif.
 
-This project is a starting point for a Flutter application.
+## 🛠️ Teknologi yang Digunakan
+- **Flutter**: Framework utama untuk pengembangan aplikasi mobile.
+- **Firebase**: Backend real-time untuk pengelolaan database, autentikasi, dan pengiriman notifikasi.
+- **ESP32**: Mikrokontroler untuk menghubungkan sensor ke aplikasi melalui protokol HTTP atau MQTT.
+- **REST API**: Komunikasi antara aplikasi dan perangkat IoT.
 
-A few resources to get you started if this is your first Flutter project:
+## 📱 Screenshot Aplikasi
+| Dashboard | Notifikasi | Kendali IoT |
+|-----------|------------|-------------|
+| ![Dashboard](assets/dashboard.png) | ![Notifikasi](assets/notifikasi.png) | ![Kendali](assets/kendali.png) |
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🚀 Instalasi
+1. **Clone repository**:
+   ```bash
+   git clone https://github.com/username/monitoring-tambak-udang.git
