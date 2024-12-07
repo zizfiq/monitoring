@@ -10,14 +10,14 @@ Aplikasi **Monitoring Tambak Udang** adalah solusi pintar berbasis Flutter yang 
 
 ## 🛠️ Teknologi yang Digunakan
 - **Flutter**: Framework utama untuk pengembangan aplikasi mobile.
-- **Firebase**: Backend real-time untuk pengelolaan database, autentikasi, dan pengiriman notifikasi.
+- **Firebase**: Backend real-time untuk pengelolaan database dan autentikasi.
 - **ESP32**: Mikrokontroler untuk menghubungkan sensor ke aplikasi melalui protokol HTTP atau MQTT.
 - **REST API**: Komunikasi antara aplikasi dan perangkat IoT.
 
 ## 📱 Screenshot Aplikasi
-| Dashboard | Notifikasi | Kendali IoT |
+| Dashboard | Data | Profil |
 |-----------|------------|-------------|
-| ![Dashboard](assets/dashboard.png) | ![Notifikasi](assets/notifikasi.png) | ![Kendali](assets/kendali.png) |
+| ![Dashboard](images/dashboard.png) | ![Data](images/data.png) | ![Profil](images/profil.png) |
 
 ## 🚀 Instalasi
 1. **Clone repository**:
@@ -50,16 +50,15 @@ Aplikasi **Monitoring Tambak Udang** adalah solusi pintar berbasis Flutter yang 
 1. **Sensor IoT**: ESP32 membaca data dari sensor yang terhubung di tambak.
 2. **Pengiriman Data**: Data sensor dikirimkan ke Firebase secara berkala.
 3. **Pemantauan Aplikasi**: Aplikasi Flutter menampilkan data secara real-time melalui dashboard.
-4. **Notifikasi**: Firebase mengirimkan notifikasi jika parameter air tidak sesuai standar.
-5. **Kontrol IoT**: Pengguna dapat mengontrol perangkat tambak, seperti pompa dan aerator, langsung dari aplikasi.
+4. **Kontrol IoT**: Pengguna dapat mengontrol perangkat tambak, seperti pompa dan aerator, langsung dari aplikasi.
 
 ---
 
 ## 📋 Roadmap
 
 - [x] Pemantauan sensor real-time.
-- [x] Push notification.
 - [x] Kendali perangkat IoT.
+- [ ] Push notification.
 - [ ] Mode offline untuk data tambak.
 - [ ] Integrasi AI untuk analisis parameter tambak.
 
