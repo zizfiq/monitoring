@@ -5,6 +5,7 @@ Aplikasi **Monitoring Tambak Udang** adalah solusi pintar berbasis Flutter yang 
 ## ✨ Fitur Utama
 - **Pemantauan Real-Time**: Pantau suhu, pH, TDS, dan EC air tambak langsung dari aplikasi.
 - **Riwayat Data**: Lihat riwayat parameter tambak untuk analisis mendalam.
+- **Ekspor Data**: Ubah data ke dalam bentuk CSV.
 - **Kendali IoT**: Kendalikan perangkat tambak seperti pemberi pakan pada anco melalui aplikasi.
 - **Tampilan Modern**: Antarmuka pengguna yang bersih, intuitif, dan responsif.
 
