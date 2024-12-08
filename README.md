@@ -5,6 +5,7 @@ Aplikasi **Monitoring Tambak Udang** adalah solusi pintar berbasis Flutter yang 
 ## ✨ Fitur Utama
 - **Pemantauan Real-Time**: Pantau suhu, pH, TDS, dan EC air tambak langsung dari aplikasi.
 - **Riwayat Data**: Lihat riwayat parameter tambak untuk analisis mendalam.
+- **Ekspor Data**: Ubah data ke dalam bentuk CSV.
 - **Kendali IoT**: Kendalikan perangkat tambak seperti pemberi pakan pada anco melalui aplikasi.
 - **Tampilan Modern**: Antarmuka pengguna yang bersih, intuitif, dan responsif.
 
@@ -16,17 +17,18 @@ Aplikasi **Monitoring Tambak Udang** adalah solusi pintar berbasis Flutter yang 
 
 ## 📱 Screenshot Aplikasi
 
-| Dashboard                  | Data                     | Profil                   | Login                   | Sign Up                 |
-|----------------------------|--------------------------|--------------------------|-------------------------|-------------------------|
-| ![Dashboard](images/dashboard.jpg) | ![Data](images/data.jpg) | ![Profil](images/profile.jpg) | ![Login](images/login.jpg) | ![SignUp](images/signup.jpg) |
+| Home                   | Data                     | Profil                   | Login                   | Sign Up                 |
+|-----------------------------|--------------------------|--------------------------|-------------------------|-------------------------|
+| ![Home](images/dashboard.jpg) | ![Data](images/data.jpg) | ![Profil](images/profile.jpg) | ![Login](images/login.jpg) | ![SignUp](images/signup.jpg) |
+
 
 ## 🚀 Instalasi
 1. **Clone repository**:
    ```bash
-   git clone https://github.com/username/monitoring-tambak-udang.git
+   git clone https://github.com/zizfiq/monitoring.git
 2. **Masuk ke direktori project: Pindah ke direktori project yang sudah di-clone**:
    ```bash
-   cd monitoring-tambak-udang
+   cd monitoring
 3. **Install dependencies**:
    ```bash
    flutter pub get
@@ -61,13 +63,12 @@ Aplikasi **Monitoring Tambak Udang** adalah solusi pintar berbasis Flutter yang 
 - [x] Kendali perangkat IoT.
 - [ ] Push notification.
 - [ ] Mode offline untuk data tambak.
-- [ ] Integrasi AI untuk analisis parameter tambak.
 
 ---
 
 ## 🤝 Kontribusi
 
-Kami terbuka untuk kontribusi dari siapa saja. Jika Anda menemukan bug atau memiliki ide untuk fitur baru, silakan:
+Pengembang sangat terbuka untuk kontribusi dari siapa saja. Jika Anda menemukan bug atau memiliki ide untuk fitur baru, silakan:
 - Ajukan **issue** di repository ini.
 - Buat **pull request** dengan perubahan yang diusulkan.
 
