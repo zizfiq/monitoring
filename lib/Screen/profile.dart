@@ -244,8 +244,8 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                         await prefs.setBool('isLoggedIn', false);
                         await FirebaseAuth.instance.signOut();
 
-                        // Menambahkan delay 1 detik sebelum berpindah ke halaman login
-                        await Future.delayed(const Duration(seconds: 1));
+                        // Menambahkan delay 2 detik sebelum berpindah ke halaman login
+                        await Future.delayed(const Duration(seconds: 2));
 
                         Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
