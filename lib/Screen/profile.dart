@@ -239,13 +239,13 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                       text: 'Keluar',
                       icon: Icons.logout_rounded,
                       onTap: () async {
+                        // Menambahkan delay 2 detik sebelum berpindah ke halaman login
+                        await Future.delayed(const Duration(seconds: 2));
+
                         SharedPreferences prefs =
                             await SharedPreferences.getInstance();
                         await prefs.setBool('isLoggedIn', false);
                         await FirebaseAuth.instance.signOut();
-
-                        // Menambahkan delay 2 detik sebelum berpindah ke halaman login
-                        await Future.delayed(const Duration(seconds: 2));
 
                         Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
