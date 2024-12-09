@@ -239,21 +239,74 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                       text: 'Keluar',
                       icon: Icons.logout_rounded,
                       onTap: () async {
-                        // Menambahkan delay 2 detik sebelum berpindah ke halaman login
-                        await Future.delayed(const Duration(seconds: 2));
-
-                        SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-                        await prefs.setBool('isLoggedIn', false);
-                        await FirebaseAuth.instance.signOut();
-
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                              builder: (context) => const LoginScreen()),
-                          (Route<dynamic> route) => false,
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text(
+                              'Logout',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                            content: const Text(
+                              'Apakah Anda yakin ingin logout?',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                              ),
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              side: BorderSide(
+                                  color: Colors.grey.shade400, width: 2),
+                            ),
+                            backgroundColor: Colors.white,
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context)
+                                      .pop(); // Tutup dialog tanpa logout
+                                },
+                                child: const Text(
+                                  'Batal',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  // Logout setelah konfirmasi
+                                  Navigator.of(context).pop(); // Tutup dialog
+                                  await Future.delayed(
+                                      const Duration(seconds: 2));
+                                  SharedPreferences prefs =
+                                      await SharedPreferences.getInstance();
+                                  await prefs.setBool('isLoggedIn', false);
+                                  await FirebaseAuth.instance.signOut();
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const LoginScreen()),
+                                    (Route<dynamic> route) => false,
+                                  );
+                                },
+                                child: const Text(
+                                  'Logout',
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         );
                       },
-                    ),
+                    )
                   ],
                 ),
               );
