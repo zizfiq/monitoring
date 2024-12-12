@@ -3,10 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
-// import 'package:monitoring/Backup/notification.dart';
 import 'package:monitoring/Screen/profile.dart';
 import 'package:monitoring/Screen/data.dart';
 import 'package:monitoring/Widget/snackbar.dart';
+import 'package:monitoring/Widget/status.dart'; // Import the CustomContainer
 
 void main() {
   runApp(const MyApp());
@@ -132,6 +132,30 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
+  String determineStatus() {
+    double temperature = sensorData['Temperature']?.toDouble() ?? 0;
+    double pH = sensorData['pH']?.toDouble() ?? 0;
+    double tds = sensorData['TDS']?.toDouble() ?? 0;
+
+    if (temperature < 25 ||
+        temperature > 36 ||
+        pH < 7.0 ||
+        pH > 9.0 ||
+        tds < 100 ||
+        tds > 500) {
+      return 'danger';
+    } else if (temperature < 29 ||
+        temperature > 32 ||
+        pH < 7.5 ||
+        pH > 8.5 ||
+        tds < 100 ||
+        tds > 150) {
+      return 'attention';
+    } else {
+      return 'optimal';
+    }
+  }
+
   Widget _buildNeoBrutalismBox({
     required String label,
     required String value,
@@ -237,6 +261,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                  ),
+                  const SizedBox(height: 16),
+                  // Display the CustomContainer based on sensor data
+                  CustomContainer(
+                    status: determineStatus(),
                   ),
                   const SizedBox(height: 16),
                   Row(
