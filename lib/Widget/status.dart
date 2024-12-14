@@ -23,7 +23,7 @@ class CustomContainer extends StatelessWidget {
         borderColor = Colors.yellow;
         icon = Icons.warning; // Icon for attention status
         text =
-            'Salah satu atau beberapa parameter mendekati batas yang kurang ideal'; // Message for attention status
+            'Salah satu atau beberapa parameter di luar batas yang dianjurkan'; // Message for attention status
         break;
       case 'danger':
         borderColor = Colors.red;

@@ -137,19 +137,16 @@ class _MyHomePageState extends State<MyHomePage> {
     double pH = sensorData['pH']?.toDouble() ?? 0;
     double tds = sensorData['TDS']?.toDouble() ?? 0;
 
-    if (temperature < 29 &&
-        temperature > 32 &&
-        pH < 7.5 &&
-        pH > 8.5 &&
-        tds < 100 &&
-        tds > 150) {
+    // Check if all parameters are out of bounds
+    bool isTemperatureOutOfBounds = temperature < 29 || temperature > 32;
+    bool isPHOutOfBounds = pH < 7.5 || pH > 8.5;
+    bool isTDSOutOfBounds = tds < 100 || tds > 150;
+
+    if (isTemperatureOutOfBounds && isPHOutOfBounds && isTDSOutOfBounds) {
       return 'danger';
-    } else if (temperature < 29 ||
-        temperature > 32 ||
-        pH < 7.5 ||
-        pH > 8.5 ||
-        tds < 100 ||
-        tds > 150) {
+    } else if (isTemperatureOutOfBounds ||
+        isPHOutOfBounds ||
+        isTDSOutOfBounds) {
       return 'attention';
     } else {
       return 'optimal';
