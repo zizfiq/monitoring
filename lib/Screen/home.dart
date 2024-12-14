@@ -137,12 +137,12 @@ class _MyHomePageState extends State<MyHomePage> {
     double pH = sensorData['pH']?.toDouble() ?? 0;
     double tds = sensorData['TDS']?.toDouble() ?? 0;
 
-    if (temperature < 25 ||
-        temperature > 36 ||
-        pH < 7.0 ||
-        pH > 9.0 ||
-        tds < 100 ||
-        tds > 500) {
+    if (temperature < 29 &&
+        temperature > 32 &&
+        pH < 7.5 &&
+        pH > 8.5 &&
+        tds < 100 &&
+        tds > 150) {
       return 'danger';
     } else if (temperature < 29 ||
         temperature > 32 ||
