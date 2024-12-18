@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'package:monitoring/Screen/profile.dart';
+import 'package:monitoring/Screen/chart.dart';
 import 'package:monitoring/Screen/data.dart';
 import 'package:monitoring/Widget/snackbar.dart';
 import 'package:monitoring/Widget/status.dart'; // Import the CustomContainer
@@ -221,6 +222,21 @@ class _MyHomePageState extends State<MyHomePage> {
             fontWeight: FontWeight.bold,
           ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.show_chart,
+                color: Colors.black), // Icon for the button
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ChartPage(
+                          title: 'Grafik',
+                        )), // Navigate to ChartPage
+              );
+            },
+          ),
+        ],
       ),
       body: sensorData.isEmpty
           ? const Center(child: CircularProgressIndicator())
