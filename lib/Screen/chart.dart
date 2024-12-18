@@ -133,8 +133,8 @@ class _ChartPageState extends State<ChartPage>
       final Map<String, dynamic> data = json.decode(response.body);
       setState(() {
         // Add new data points with incremental x values
-        temperatureData
-            .add(FlSpot(dataPoints.toDouble(), data['Suhu']?.toDouble() ?? 0));
+        temperatureData.add(FlSpot(
+            dataPoints.toDouble(), data['Temperature']?.toDouble() ?? 0));
         pHData.add(FlSpot(dataPoints.toDouble(), data['pH']?.toDouble() ?? 0));
         tdsData
             .add(FlSpot(dataPoints.toDouble(), data['TDS']?.toDouble() ?? 0));
