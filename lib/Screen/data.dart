@@ -107,7 +107,10 @@ class _DataPageState extends State<DataPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.upload, color: Colors.green),
-            onPressed: _exportDataToCSV,
+            onPressed: () {
+              _exportDataToCSV(); // Memanggil fungsi ekspor data ke CSV
+              Navigator.pop(context); // Kembali ke layar sebelumnya
+            },
             tooltip: 'Ekspor Data ke CSV',
           ),
           IconButton(
