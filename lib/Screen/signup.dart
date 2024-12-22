@@ -347,7 +347,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 const SizedBox(height: 30),
 
                 Container(
-                  alignment: Alignment.centerLeft,
+                  alignment: Alignment.center,
                   child: GestureDetector(
                     onTap: () => Navigator.pop(context),
                     child: const Text(
