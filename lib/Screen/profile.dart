@@ -212,7 +212,7 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                       text: 'Bantuan & Dukungan',
                       icon: Icons.help_outline_rounded,
                       onTap: () => _launchUrl(
-                        'mailto:fiqri.aaziz@gmail.com?subject=Laporan%20Bug%20&%20Support&body=Tuliskan%20kendala%20anda%20disini%20here.',
+                        'mailto:fiqri.aaziz@gmail.com?subject=Laporan%20Bug%20&%20Support&body=Tuliskan%20kendala%20anda%20disini.',
                         context,
                       ),
                     ),
