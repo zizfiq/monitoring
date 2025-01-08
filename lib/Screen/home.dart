@@ -268,7 +268,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ],
                     ),
                     child: const Text(
-                      '#002 - Kelapapati Laut',
+                      '#002 - Bengkalis',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
