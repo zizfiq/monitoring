@@ -115,58 +115,32 @@ class _LoginScreenState extends State<LoginScreen> {
       isLoading = true;
     });
 
-    try {
-      String res = await AuthMethod().loginUser(
-          email: emailController.text, password: passwordController.text);
+    String res = await AuthMethod().loginUser(
+        email: emailController.text, password: passwordController.text);
 
-      if (res == "success") {
-        await storage.delete(key: 'email');
-        await storage.delete(key: 'password');
+    if (res == "success") {
+      await storage.delete(key: 'email');
+      await storage.delete(key: 'password');
 
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setBool('isLoggedIn', true);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLoggedIn', true);
 
-        setState(() {
-          isLoading = false;
-        });
+      setState(() {
+        isLoading = false;
+      });
 
-        if (!mounted) return;
-
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => const MyHomePage(
-              title: 'Monitoring Tambak Udang',
-            ),
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const MyHomePage(
+            title: 'Monitoring Tambak Udang',
           ),
-        );
-      }
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        isLoading = false;
-        // Handle specific Firebase Auth errors
-        switch (e.code) {
-          case 'user-not-found':
-            emailError = "Email tidak terdaftar";
-            break;
-          case 'wrong-password':
-            passwordError = "Kata sandi salah";
-            break;
-          case 'invalid-email':
-            emailError = "Format email tidak valid";
-            break;
-          case 'email-already-in-use':
-            emailError = "Email sudah terdaftar";
-            break;
-          default:
-            showSnackBar(context, "Terjadi kesalahan: ${e.message}");
-        }
-      });
-    } catch (e) {
+        ),
+      );
+    } else {
       setState(() {
         isLoading = false;
       });
-      if (!mounted) return;
-      showSnackBar(context, "Terjadi kesalahan tak terduga");
+      showSnackBar(context, "Email atau kata sandi salah.");
     }
   }
 
