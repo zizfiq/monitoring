@@ -141,7 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // Check if all parameters are out of bounds
     bool isTemperatureOutOfBounds = temperature < 29 || temperature > 32;
     bool isPHOutOfBounds = pH < 7.5 || pH > 8.5;
-    bool isTDSOutOfBounds = tds < 100 || tds > 150;
+    bool isTDSOutOfBounds = tds < 100 || tds > 500;
 
     if (isTemperatureOutOfBounds && isPHOutOfBounds && isTDSOutOfBounds) {
       return 'danger';
