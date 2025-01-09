@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:monitoring/Screen/about.dart';
 import 'package:monitoring/Screen/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -104,7 +105,7 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
               return const Center(child: Text('No user found'));
             } else {
               final user = snapshot.data!;
-              displayName = user.displayName ?? 'Admin Tambak';
+              displayName = user.displayName ?? 'Penjaga Tambak';
               email = user.email ?? 'No email';
               profileImageUrl = user.photoURL;
 
@@ -221,17 +222,19 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                       text: 'Kirim umpan balik',
                       icon: Icons.feedback_outlined,
                       onTap: () => _launchUrl(
-                        'https://wa.me/6285158560066',
+                        'mailto:fiqri.aaziz@gmail.com?subject=Umpan%20Balik%20&%20Support&body=Tuliskan%20umpan%20balik%20anda%20disini.',
                         context,
                       ),
                     ),
                     const SizedBox(height: 16),
                     _buildProfileButton(
-                      text: 'Tentang pengembang',
-                      icon: Icons.person,
-                      onTap: () => _launchUrl(
-                        'https://www.linkedin.com/in/fiqriabdulaziz',
+                      text: 'Tentang',
+                      icon: Icons.info_outline_rounded,
+                      onTap: () => Navigator.push(
                         context,
+                        MaterialPageRoute(
+                          builder: (context) => const AboutPage(),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -259,8 +262,7 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
                             ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
-                              side: BorderSide(
-                                  color: Colors.grey.shade400, width: 2),
+                              side: BorderSide(color: Colors.black, width: 2),
                             ),
                             backgroundColor: Colors.white,
                             actions: [
