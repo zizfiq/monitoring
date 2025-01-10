@@ -10,7 +10,7 @@ class AboutPage extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         title: const Text(
-          'Data Pakan',
+          'Tentang',
           style: TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
