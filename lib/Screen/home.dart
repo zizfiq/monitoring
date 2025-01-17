@@ -7,7 +7,7 @@ import 'package:monitoring/Screen/profile.dart';
 import 'package:monitoring/Screen/chart.dart';
 import 'package:monitoring/Screen/data.dart';
 import 'package:monitoring/Widget/snackbar.dart';
-import 'package:monitoring/Widget/status.dart'; // Import the CustomContainer
+import 'package:monitoring/Widget/status.dart';
 
 void main() {
   runApp(const MyApp());
@@ -48,9 +48,8 @@ class _MyHomePageState extends State<MyHomePage> {
   final String databaseUrl =
       'https://monitoring-2f6fc-default-rtdb.asia-southeast1.firebasedatabase.app';
 
-  // New variable to hold feed amount input
   final TextEditingController _feedAmountController = TextEditingController();
-  final FocusNode _focusNode = FocusNode(); // FocusNode for the TextField
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
@@ -122,6 +121,29 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  Color getParameterColor(String parameter, double value) {
+    switch (parameter) {
+      case 'Suhu':
+        return (value < 29 || value > 32)
+            ? Colors.red.shade100
+            : Colors.green.shade100;
+      case 'pH':
+        return (value < 7.5 || value > 8.5)
+            ? Colors.red.shade100
+            : Colors.green.shade100;
+      case 'TDS':
+        return (value < 100 || value > 500)
+            ? Colors.red.shade100
+            : Colors.green.shade100;
+      case 'EC':
+        return (value < 0 || value > 5)
+            ? Colors.red.shade100
+            : Colors.green.shade100;
+      default:
+        return Colors.white;
+    }
+  }
+
   String formatNumber(double value) {
     return value.toStringAsFixed(2);
   }
@@ -129,7 +151,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void dispose() {
     _timer?.cancel();
-    _feedAmountController.dispose(); // Dispose the controller
+    _feedAmountController.dispose();
     super.dispose();
   }
 
@@ -137,17 +159,22 @@ class _MyHomePageState extends State<MyHomePage> {
     double temperature = sensorData['Temperature']?.toDouble() ?? 0;
     double pH = sensorData['pH']?.toDouble() ?? 0;
     double tds = sensorData['TDS']?.toDouble() ?? 0;
+    double ec = sensorData['EC']?.toDouble() ?? 0;
 
-    // Check if all parameters are out of bounds
     bool isTemperatureOutOfBounds = temperature < 29 || temperature > 32;
     bool isPHOutOfBounds = pH < 7.5 || pH > 8.5;
     bool isTDSOutOfBounds = tds < 100 || tds > 500;
+    bool isECOutOfBounds = ec < 0 || ec > 5;
 
-    if (isTemperatureOutOfBounds && isPHOutOfBounds && isTDSOutOfBounds) {
+    if (isTemperatureOutOfBounds &&
+        isPHOutOfBounds &&
+        isTDSOutOfBounds &&
+        isECOutOfBounds) {
       return 'danger';
     } else if (isTemperatureOutOfBounds ||
         isPHOutOfBounds ||
-        isTDSOutOfBounds) {
+        isTDSOutOfBounds ||
+        isECOutOfBounds) {
       return 'attention';
     } else {
       return 'optimal';
@@ -157,14 +184,17 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _buildNeoBrutalismBox({
     required String label,
     required String value,
-    Color labelBackgroundColor = Colors.white,
     double width = double.infinity,
   }) {
+    double numericValue =
+        double.tryParse(value.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0;
+
     return Container(
       width: width,
       margin: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Colors.black, width: 2),
         boxShadow: const [
           BoxShadow(
@@ -180,7 +210,11 @@ class _MyHomePageState extends State<MyHomePage> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: labelBackgroundColor,
+              color: getParameterColor(label, numericValue),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(6),
+                topRight: Radius.circular(6),
+              ),
               border: const Border(
                 bottom: BorderSide(color: Colors.black, width: 2),
               ),
@@ -224,15 +258,12 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.show_chart,
-                color: Colors.black), // Icon for the button
+            icon: const Icon(Icons.show_chart, color: Colors.black),
             onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const ChartPage(
-                          title: 'Grafik',
-                        )), // Navigate to ChartPage
+                    builder: (context) => const ChartPage(title: 'Grafik')),
               );
             },
           ),
@@ -258,6 +289,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
                       border: Border.all(color: Colors.black, width: 2),
                       boxShadow: const [
                         BoxShadow(
@@ -276,9 +308,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  // Display the CustomContainer based on sensor data
-                  CustomContainer(
-                    status: determineStatus(),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: CustomContainer(
+                      status: determineStatus(),
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Row(
@@ -288,15 +322,13 @@ class _MyHomePageState extends State<MyHomePage> {
                           label: 'Suhu',
                           value:
                               '${formatNumber(sensorData['Temperature']?.toDouble() ?? 0)}°C',
-                          labelBackgroundColor: Colors.blue.shade100,
                         ),
                       ),
                       Expanded(
                         child: _buildNeoBrutalismBox(
                           label: 'TDS',
                           value:
-                              '${formatNumber(sensorData['TDS']?.toDouble() ?? 0)}ppm',
-                          labelBackgroundColor: Colors.green.shade100,
+                              '${(sensorData['TDS']?.toDouble() ?? 0).round()}ppm',
                         ),
                       ),
                     ],
@@ -308,7 +340,6 @@ class _MyHomePageState extends State<MyHomePage> {
                           label: 'pH',
                           value:
                               formatNumber(sensorData['pH']?.toDouble() ?? 0),
-                          labelBackgroundColor: Colors.green.shade100,
                         ),
                       ),
                       Expanded(
@@ -316,7 +347,6 @@ class _MyHomePageState extends State<MyHomePage> {
                           label: 'EC',
                           value:
                               formatNumber(sensorData['EC']?.toDouble() ?? 0),
-                          labelBackgroundColor: Colors.orange.shade100,
                         ),
                       ),
                     ],
@@ -327,6 +357,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
                       border: Border.all(color: Colors.black, width: 2),
                       boxShadow: const [
                         BoxShadow(
@@ -355,25 +386,27 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
                         const SizedBox(height: 12),
-                        // New TextField for feed amount input
                         TextField(
                           controller: _feedAmountController,
-                          focusNode: _focusNode, // Assign the FocusNode
-                          decoration: const InputDecoration(
+                          focusNode: _focusNode,
+                          decoration: InputDecoration(
                             labelText: 'Jumlah Pakan (gram)',
-                            labelStyle: TextStyle(color: Colors.grey),
-                            border: OutlineInputBorder(),
+                            labelStyle: const TextStyle(color: Colors.grey),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
                             enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(color: Colors.grey),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(color: Colors.black),
                             ),
                           ),
                           keyboardType: TextInputType.number,
                           inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter
-                                .digitsOnly, // Allow only digits
+                            FilteringTextInputFormatter.digitsOnly,
                           ],
                           cursorColor: Colors.black,
                         ),
@@ -384,9 +417,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             onPressed: isButtonDisabled || isButtonPressed
                                 ? null
                                 : () async {
-                                    // Check if feed amount is empty
                                     if (_feedAmountController.text.isEmpty) {
-                                      // Show snackbar if empty
                                       showSnackBar(context,
                                           'Silakan masukkan jumlah pakan terlebih dahulu');
                                       return;
@@ -423,10 +454,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                         }),
                                       );
                                     }
-                                    // Clear the feed amount input field and reset to initial state
                                     _feedAmountController.clear();
-                                    _focusNode
-                                        .unfocus(); // Remove focus from the TextField
+                                    _focusNode.unfocus();
                                     await Future.delayed(
                                         const Duration(seconds: 2));
                                     isButtonPressed = false;
@@ -439,7 +468,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                                 side: const BorderSide(
-                                    color: Colors.black, width: 1),
+                                    color: Colors.black, width: 2),
                               ),
                               elevation: 4,
                             ),
