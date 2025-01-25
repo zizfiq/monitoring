@@ -93,6 +93,7 @@ class _ProfilePageState extends State<ProfilePage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF0F0F0),
       body: SafeArea(
         child: FutureBuilder<User?>(
           future: _getUserInfo(),

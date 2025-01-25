@@ -136,7 +136,7 @@ class _DataPageState extends State<DataPage> {
                   ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
-                    side: BorderSide(color: Colors.grey.shade400, width: 2),
+                    side: BorderSide(color: Colors.black, width: 2),
                   ),
                   backgroundColor: Colors.white,
                   actions: [
