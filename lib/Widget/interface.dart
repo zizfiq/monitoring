@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AppStyles {
   static const TextStyle titleStyle = TextStyle(
@@ -148,13 +149,13 @@ class GoogleSignInButton extends StatelessWidget {
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.network(
-              'https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA',
-              height: 24,
+          children: const [
+            Icon(
+              FontAwesomeIcons.google,
+              size: 24,
             ),
-            const SizedBox(width: 12),
-            const Text(
+            SizedBox(width: 12),
+            Text(
               'Lanjutkan dengan Google',
               style: TextStyle(
                 fontSize: 16,

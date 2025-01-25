@@ -8,6 +8,8 @@ import 'package:monitoring/Screen/chart.dart';
 import 'package:monitoring/Screen/data.dart';
 import 'package:monitoring/Widget/snackbar.dart';
 import 'package:monitoring/Widget/status.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   runApp(const MyApp());
@@ -51,10 +53,54 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _feedAmountController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
 
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
   @override
   void initState() {
     super.initState();
+    _initializeNotifications();
     _startTimer();
+    _requestNotificationPermission();
+  }
+
+  void _initializeNotifications() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    const InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  Future<void> _requestNotificationPermission() async {
+    if (await Permission.notification.isDenied ||
+        await Permission.notification.isPermanentlyDenied) {
+      await Permission.notification.request();
+    }
+  }
+
+  void _showNotification(String message) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'feed_channel',
+      'Feed Notifications',
+      channelDescription: 'Notification for feed action',
+      importance: Importance.max,
+      priority: Priority.high,
+      showWhen: true,
+    );
+
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'Tambak App',
+      message,
+      platformChannelSpecifics,
+    );
   }
 
   void _startTimer() {
@@ -454,6 +500,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                         }),
                                       );
                                     }
+                                    // Menampilkan notifikasi
+                                    _showNotification(
+                                        'Berhasil memberi pakan!');
+
                                     _feedAmountController.clear();
                                     _focusNode.unfocus();
                                     await Future.delayed(
