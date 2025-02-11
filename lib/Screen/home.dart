@@ -209,7 +209,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     bool isTemperatureOutOfBounds = temperature < 29 || temperature > 32;
     bool isPHOutOfBounds = pH < 7.5 || pH > 8.5;
-    bool isTDSOutOfBounds = tds < 100 || tds > 500;
+    bool isTDSOutOfBounds = tds < 100 || tds > 1000;
     bool isECOutOfBounds = ec < 0 || ec > 5;
 
     if (isTemperatureOutOfBounds &&
@@ -458,79 +458,172 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         const SizedBox(height: 12),
                         SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: isButtonDisabled || isButtonPressed
-                                ? null
-                                : () async {
-                                    if (_feedAmountController.text.isEmpty) {
-                                      showSnackBar(context,
-                                          'Silakan masukkan jumlah pakan terlebih dahulu');
-                                      return;
-                                    }
-                                    isButtonPressed = true;
-                                    await _activateServo();
-                                    final response = await http.get(Uri.parse(
-                                        '$databaseUrl/sensorData.json?auth=$apiKey'));
-                                    if (response.statusCode == 200) {
-                                      final sensorData =
-                                          json.decode(response.body);
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: isButtonDisabled || isButtonPressed
+                                  ? null
+                                  : () async {
+                                      if (_feedAmountController.text.isEmpty) {
+                                        showSnackBar(context,
+                                            'Silakan masukkan jumlah pakan terlebih dahulu');
+                                        return;
+                                      }
 
-                                      final now = DateTime.now();
-                                      final timeKey =
-                                          now.millisecondsSinceEpoch.toString();
+                                      final feedAmount = int.tryParse(
+                                              _feedAmountController.text) ??
+                                          0;
+                                      if (feedAmount < 100) {
+                                        showSnackBar(context,
+                                            'Jumlah pakan minimal harus 100');
+                                        return;
+                                      }
 
-                                      await http.put(
-                                        Uri.parse(
-                                            '$databaseUrl/feedingData/$timeKey.json?auth=$apiKey'),
-                                        body: json.encode({
-                                          'timestamp': now.toIso8601String(),
-                                          'feedAmount': int.tryParse(
-                                                  _feedAmountController.text) ??
-                                              0,
-                                          'temperature':
-                                              sensorData['Temperature']
-                                                      ?.toDouble() ??
-                                                  0,
-                                          'tds':
-                                              sensorData['TDS']?.toDouble() ??
-                                                  0,
-                                          'ph':
-                                              sensorData['pH']?.toDouble() ?? 0,
-                                        }),
+                                      // Tambahkan Alert Dialog untuk konfirmasi
+                                      bool? confirm = await showDialog<bool>(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            AlertDialog(
+                                          title: const Text(
+                                            'Konfirmasi Pemberian Pakan',
+                                            style: TextStyle(
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          content: Text(
+                                            'Apakah Anda yakin ingin memberi pakan sebanyak $feedAmount gram?',
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            side: const BorderSide(
+                                                color: Colors.black, width: 2),
+                                          ),
+                                          backgroundColor: Colors.white,
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .pop(false);
+                                              },
+                                              child: const Text(
+                                                'Batal',
+                                                style: TextStyle(
+                                                  color: Colors.red,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop(true);
+                                              },
+                                              child: const Text(
+                                                'Ya',
+                                                style: TextStyle(
+                                                  color: Colors.blue,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       );
-                                    }
-                                    // Menampilkan notifikasi
-                                    _showNotification(
-                                        'Berhasil memberi pakan!');
 
-                                    _feedAmountController.clear();
-                                    _focusNode.unfocus();
-                                    await Future.delayed(
-                                        const Duration(seconds: 2));
-                                    isButtonPressed = false;
-                                  },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  isButtonDisabled ? Colors.grey : Colors.blue,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                side: const BorderSide(
-                                    color: Colors.black, width: 2),
+                                      // Lanjutkan proses jika user mengkonfirmasi
+                                      if (confirm == true) {
+                                        setState(() {
+                                          isButtonPressed = true;
+                                        });
+
+                                        try {
+                                          // Update feedAmount in the database
+                                          await http.patch(
+                                            Uri.parse(
+                                                '$databaseUrl/feedingData.json?auth=$apiKey'),
+                                            body: json.encode({
+                                              'feedAmount': feedAmount,
+                                            }),
+                                          );
+
+                                          // Activate servo and get sensor data
+                                          await _activateServo();
+                                          final response = await http.get(Uri.parse(
+                                              '$databaseUrl/sensorData.json?auth=$apiKey'));
+
+                                          if (response.statusCode == 200) {
+                                            final sensorData =
+                                                json.decode(response.body);
+                                            final now = DateTime.now();
+                                            final timeKey = now
+                                                .millisecondsSinceEpoch
+                                                .toString();
+
+                                            // Log feeding event
+                                            await http.put(
+                                              Uri.parse(
+                                                  '$databaseUrl/feedingData/$timeKey.json?auth=$apiKey'),
+                                              body: json.encode({
+                                                'timestamp':
+                                                    now.toIso8601String(),
+                                                'feedAmount': feedAmount,
+                                                'temperature':
+                                                    sensorData['Temperature']
+                                                            ?.toDouble() ??
+                                                        0,
+                                                'tds': sensorData['TDS']
+                                                        ?.toDouble() ??
+                                                    0,
+                                                'ph': sensorData['pH']
+                                                        ?.toDouble() ??
+                                                    0,
+                                              }),
+                                            );
+
+                                            _showNotification(
+                                                'Berhasil memberi pakan!');
+                                            _feedAmountController.clear();
+                                            _focusNode.unfocus();
+                                          }
+                                        } catch (e) {
+                                          _showNotification(
+                                              'Gagal memberi pakan: ${e.toString()}');
+                                        } finally {
+                                          await Future.delayed(
+                                              const Duration(seconds: 2));
+                                          setState(() {
+                                            isButtonPressed = false;
+                                          });
+                                        }
+                                      }
+                                    },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: isButtonDisabled
+                                    ? Colors.grey
+                                    : Colors.blue,
+                                foregroundColor: Colors.white,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  side: const BorderSide(
+                                      color: Colors.black, width: 2),
+                                ),
+                                elevation: 4,
                               ),
-                              elevation: 4,
-                            ),
-                            child: const Text(
-                              'Beri pakan',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                              child: const Text(
+                                'Beri pakan',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
+                            )),
                       ],
                     ),
                   ),
