@@ -16,6 +16,7 @@ class DataPage extends StatefulWidget {
 
 class _DataPageState extends State<DataPage> {
   List<FeedingData> feedingData = [];
+  bool isLoading = true;
   final String apiKey = 'AIzaSyC9kIkLAGkB0xIS31vXQ8mtqMXED9TnSQc';
   final String databaseUrl =
       'https://monitoring-2f6fc-default-rtdb.asia-southeast1.firebasedatabase.app';
@@ -27,36 +28,78 @@ class _DataPageState extends State<DataPage> {
   }
 
   Future<void> _fetchFeedingData() async {
-    final response =
-        await http.get(Uri.parse('$databaseUrl/feedingData.json?auth=$apiKey'));
-    if (response.statusCode == 200 && response.body != 'null') {
-      final Map<String, dynamic> data = json.decode(response.body);
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final response = await http.get(
+        Uri.parse('$databaseUrl/feedingData.json?auth=$apiKey'),
+      );
+
+      if (response.statusCode == 200) {
+        if (response.body == 'null' || response.body.isEmpty) {
+          setState(() {
+            feedingData = [];
+            isLoading = false;
+          });
+          return;
+        }
+
+        final Map<String, dynamic> data = json.decode(response.body);
+        final List<FeedingData> newData = [];
+
+        data.forEach((key, value) {
+          try {
+            final timestamp = value['timestamp'] as String;
+            newData.add(FeedingData(
+              timestamp: DateTime.parse(timestamp),
+              feedAmount: (value['feedAmount'] as num).toInt(),
+              temperature: (value['temperature'] as num).toDouble(),
+              tds: (value['tds'] as num).toDouble(),
+              ph: (value['ph'] as num).toDouble(),
+            ));
+          } catch (e) {
+            print('Error parsing data entry: $e');
+          }
+        });
+
+        setState(() {
+          feedingData = newData
+            ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
+          isLoading = false;
+        });
+      } else {
+        print('Failed to fetch data: ${response.statusCode}');
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
       setState(() {
-        feedingData = data.entries.map((entry) {
-          final value = entry.value;
-          return FeedingData(
-            timestamp: DateTime.parse(value['timestamp']),
-            feedAmount: value['feedAmount'],
-            temperature: value['temperature'],
-            tds: value['tds'],
-            ph: value['ph'],
-          );
-        }).toList();
-        feedingData.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+        isLoading = false;
       });
+      showSnackBar(context, 'Gagal mengambil data');
     }
   }
 
   Future<void> _deleteAllData() async {
-    final response = await http
-        .delete(Uri.parse('$databaseUrl/feedingData.json?auth=$apiKey'));
-    if (response.statusCode == 200) {
-      setState(() {
-        feedingData.clear();
-      });
-      showSnackBar(context, 'Data berhasil dihapus');
-    } else {
-      print('Failed to delete data');
+    try {
+      final response = await http.delete(
+        Uri.parse('$databaseUrl/feedingData.json?auth=$apiKey'),
+      );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          feedingData.clear();
+        });
+        showSnackBar(context, 'Data berhasil dihapus');
+      } else {
+        showSnackBar(context, 'Gagal menghapus data');
+      }
+    } catch (e) {
+      showSnackBar(context, 'Terjadi kesalahan saat menghapus data');
     }
   }
 
@@ -66,20 +109,23 @@ class _DataPageState extends State<DataPage> {
       return;
     }
 
-    String csvData = 'Tanggal,Berat Pakan,Suhu,TDS,pH\n';
-    for (var data in feedingData) {
-      csvData +=
-          '${DateFormat('dd/MM/yyyy HH:mm').format(data.timestamp)},${data.feedAmount},${data.temperature},${data.tds},${data.ph}\n';
+    try {
+      String csvData = 'Tanggal,Berat Pakan,Suhu,TDS,pH\n';
+      for (var data in feedingData) {
+        csvData +=
+            '${DateFormat('dd/MM/yyyy HH:mm').format(data.timestamp)},${data.feedAmount},${data.temperature},${data.tds},${data.ph}\n';
+      }
+
+      final directory = await getApplicationDocumentsDirectory();
+      final path = '${directory.path}/Data_Tambak_udang.csv';
+      final file = File(path);
+      await file.writeAsString(csvData);
+
+      await Share.shareXFiles([XFile(path)], text: 'Data Pakan');
+      showSnackBar(context, 'Data telah diekspor ke CSV');
+    } catch (e) {
+      showSnackBar(context, 'Gagal mengekspor data');
     }
-
-    final directory = await getApplicationDocumentsDirectory();
-    final path = '${directory.path}/Data_Tambak_udang.csv';
-    final file = File(path);
-    await file.writeAsString(csvData);
-
-    Share.shareXFiles([XFile(path)], text: 'Data Pakan');
-
-    showSnackBar(context, 'Data telah diekspor ke CSV');
   }
 
   String _formatDateTime(DateTime dateTime) {
@@ -106,11 +152,13 @@ class _DataPageState extends State<DataPage> {
         ),
         actions: [
           IconButton(
+            icon: const Icon(Icons.refresh, color: Colors.blue),
+            onPressed: _fetchFeedingData,
+            tooltip: 'Refresh Data',
+          ),
+          IconButton(
             icon: const Icon(Icons.upload, color: Colors.green),
-            onPressed: () {
-              _exportDataToCSV(); // Memanggil fungsi ekspor data ke CSV
-              Navigator.pop(context); // Kembali ke layar sebelumnya
-            },
+            onPressed: _exportDataToCSV,
             tooltip: 'Ekspor Data ke CSV',
           ),
           IconButton(
@@ -136,14 +184,12 @@ class _DataPageState extends State<DataPage> {
                   ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
-                    side: BorderSide(color: Colors.black, width: 2),
+                    side: const BorderSide(color: Colors.black, width: 2),
                   ),
                   backgroundColor: Colors.white,
                   actions: [
                     TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
+                      onPressed: () => Navigator.of(context).pop(),
                       child: const Text(
                         'Batal',
                         style: TextStyle(
@@ -236,64 +282,78 @@ class _DataPageState extends State<DataPage> {
               ),
             ),
             Expanded(
-              child: ListView.builder(
-                itemCount: feedingData.length,
-                itemBuilder: (context, index) {
-                  final data = feedingData[index];
-                  final isEven = index.isEven;
+              child: isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : feedingData.isEmpty
+                      ? const Center(
+                          child: Text(
+                            'Tidak ada data',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        )
+                      : ListView.builder(
+                          itemCount: feedingData.length,
+                          itemBuilder: (context, index) {
+                            final data = feedingData[index];
+                            final isEven = index.isEven;
 
-                  return Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: isEven ? Colors.white : Colors.grey[50],
-                      border: const Border(
-                        bottom: BorderSide(color: Colors.black, width: 1),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Text(_formatDateTime(data.timestamp)),
+                            return Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: isEven ? Colors.white : Colors.grey[50],
+                                border: const Border(
+                                  bottom:
+                                      BorderSide(color: Colors.black, width: 1),
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                    child:
+                                        Text(_formatDateTime(data.timestamp)),
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color: Colors.blue[100],
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(color: Colors.black),
+                                      ),
+                                      child: Text(
+                                        '${data.feedAmount}g',
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      '${data.temperature.toStringAsFixed(1)}°C',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      '${data.tds.toStringAsFixed(0)}ppm',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      data.ph.toStringAsFixed(3),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
                         ),
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Colors.blue[100],
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Colors.black),
-                            ),
-                            child: Text(
-                              '${data.feedAmount}g',
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            '${data.temperature.toStringAsFixed(0)}°C',
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            '${data.tds.toStringAsFixed(0)}ppm',
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            data.ph.toStringAsFixed(3),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
             ),
           ],
         ),
