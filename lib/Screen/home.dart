@@ -209,7 +209,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     bool isTemperatureOutOfBounds = temperature < 29 || temperature > 32;
     bool isPHOutOfBounds = pH < 7.5 || pH > 8.5;
-    bool isTDSOutOfBounds = tds < 100 || tds > 1000;
+    bool isTDSOutOfBounds = tds < 100 || tds > 500;
     bool isECOutOfBounds = ec < 0 || ec > 5;
 
     if (isTemperatureOutOfBounds &&
